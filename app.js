@@ -392,7 +392,7 @@
     consoleOutput.replaceChildren();
     const placeholder = document.createElement('div');
     placeholder.className = 'console-placeholder';
-    placeholder.textContent = 'Console dibersihkan. Jalankan kode untuk melihat output baru.';
+    placeholder.textContent = 'Console kosong. Output dari console.log(), console.warn(), dan console.error() akan muncul di sini.';
     consoleOutput.append(placeholder);
     consoleState.textContent = 'Console dibersihkan';
   }
@@ -418,17 +418,42 @@
     }
   }
 
-  function appendConsole(type, values, prefix) {
+  function appendConsole(type, values) {
     const placeholder = consoleOutput.querySelector('.console-placeholder');
     if (placeholder) placeholder.remove();
+
     const row = document.createElement('div');
     row.className = 'console-entry ' + type;
-    const label = document.createElement('span');
-    label.className = 'console-prefix';
-    label.textContent = prefix || type.toUpperCase();
-    const content = document.createElement('span');
-    content.textContent = (values || []).map(formatConsoleValue).join(' ');
-    row.append(label, content);
+    const marker = document.createElement('span');
+    marker.className = 'console-marker';
+    marker.setAttribute('aria-hidden', 'true');
+    marker.textContent = type === 'error' ? '×' : type === 'warn' ? '⚠' : type === 'info' ? 'ℹ' : '›';
+    marker.title = type === 'error' ? 'Error' : type === 'warn' ? 'Warning' : type === 'info' ? 'Info' : 'Log';
+
+    const content = document.createElement('div');
+    content.className = 'console-content';
+    (values || []).forEach((value, index) => {
+      if (index > 0) content.append(document.createTextNode(' '));
+      if (value && typeof value === 'object') {
+        const details = document.createElement('details');
+        details.className = 'console-object';
+        const summary = document.createElement('summary');
+        const isArray = Array.isArray(value);
+        const keys = isArray ? value.length : Object.keys(value).length;
+        summary.textContent = isArray ? 'Array(' + keys + ') {…}' : 'Object {…}';
+        const pre = document.createElement('pre');
+        pre.textContent = formatConsoleValue(value);
+        details.append(summary, pre);
+        content.append(details);
+      } else {
+        const item = document.createElement('span');
+        item.className = 'console-value ' + (typeof value === 'string' ? 'string-value' : typeof value);
+        item.textContent = formatConsoleValue(value);
+        content.append(item);
+      }
+    });
+
+    row.append(marker, content);
     consoleOutput.append(row);
     consoleEntryCount += 1;
     $('#consoleBadge').textContent = String(consoleEntryCount);
@@ -445,7 +470,7 @@
     }
     if (data.type === 'console') {
       const level = ['log', 'info', 'warn', 'error'].includes(data.level) ? data.level : 'log';
-      appendConsole(level, Array.isArray(data.values) ? data.values : [], level.toUpperCase());
+      appendConsole(level, Array.isArray(data.values) ? data.values : []);
       if (level === 'error') {
         runHadError = true;
         consoleState.textContent = 'Selesai dengan error';
@@ -461,7 +486,6 @@
     if (data.type === 'finished') {
       const elapsed = Math.max(0, Math.round(performance.now() - runStartedAt));
       consoleState.textContent = runHadError ? 'Selesai dengan error · ' + elapsed + ' ms' : 'Selesai · ' + elapsed + ' ms';
-      appendConsole('result', ['Eksekusi selesai dalam ' + elapsed + ' ms'], 'DONE');
       $('#previewState').textContent = 'Dijalankan · ' + elapsed + ' ms';
     }
   }
@@ -546,7 +570,6 @@
       previewEmpty.hidden = true;
       $('#previewState').textContent = 'Memuat preview…';
       previewFrame.srcdoc = buildPreviewDocument(runToken, editors.html.value, editors.css.value, editors.js.value);
-      appendConsole('info', ['Menjalankan JavaScript…'], 'RUN');
 
     } catch (error) {
       showToast('Format atau eksekusi gagal: ' + (error.message || error));
