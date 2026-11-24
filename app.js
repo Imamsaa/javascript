@@ -379,6 +379,7 @@
       '      send("command-error", { requestId: requestId, message: error && error.message ? error.message : String(error), stack: error && error.stack ? error.stack : "" });',
       '    }',
       '  });',
+      '  send("ready");',
       '  const cssBinary = atob(' + JSON.stringify(encodeBase64Utf8(css)) + ');',
       '  const cssBytes = Uint8Array.from(cssBinary, (char) => char.charCodeAt(0));',
       '  const style = document.createElement("style");',
@@ -511,7 +512,8 @@
       const requestId = String(data.requestId || '');
       if (!pendingCommands.has(requestId)) return;
       pendingCommands.delete(requestId);
-      appendConsole('error', [data.message || 'Command error' + (data.stack ? '\n' + data.stack : '')]);
+      const detail = data.message || 'Command error';
+      appendConsole('error', [data.stack ? detail + '\n' + data.stack : detail]);
       return;
     }
     if (data.type === 'clear') {
