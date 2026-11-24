@@ -62,7 +62,9 @@
   let commandCounter = 0;
   let commandHistory = [];
   let commandHistoryIndex = 0;
+  let previewRuntimeReady = false;
   const pendingCommands = new Set();
+  const queuedConsoleCommands = [];
   let lintCacheText = null;
   let lintCacheMessages = [];
   let linter = null;
@@ -481,7 +483,12 @@
     const data = event.data;
     if (!data || data.channel !== CHANNEL || data.token !== runToken) return;
     if (data.type === 'ready') {
+      previewRuntimeReady = true;
       if (consoleState.textContent === 'Sedang dijalankan…') consoleState.textContent = 'Berjalan';
+      while (queuedConsoleCommands.length) {
+        const queued = queuedConsoleCommands.shift();
+        previewFrame.contentWindow.postMessage(queued, '*');
+      }
       return;
     }
     if (data.type === 'console') {
@@ -504,8 +511,7 @@
       const requestId = String(data.requestId || '');
       if (!pendingCommands.has(requestId)) return;
       pendingCommands.delete(requestId);
-      appendConsole('error', [data.message || 'Command error']);
-      if (data.stack) appendConsole('error-stack', [data.stack]);
+      appendConsole('error', [data.message || 'Command error' + (data.stack ? '\n' + data.stack : '')]);
       return;
     }
     if (data.type === 'clear') {
@@ -596,6 +602,8 @@
       consoleState.textContent = 'Sedang dijalankan…';
       runStartedAt = performance.now();
       runToken = makeToken();
+      previewRuntimeReady = false;
+      queuedConsoleCommands.length = 0;
       runHadError = false;
       previewWrap.classList.add('has-content');
       previewEmpty.hidden = true;
@@ -625,10 +633,15 @@
     appendConsole('command', [command]);
     const requestId = String(++commandCounter);
     pendingCommands.add(requestId);
-    previewFrame.contentWindow.postMessage({
-      channel: CHANNEL, token: runToken, type: 'command',
-      requestId: requestId, command: command
-    }, '*');
+    const message = {
+      channel: CHANNEL,
+      token: runToken,
+      type: 'command',
+      requestId: requestId,
+      command: command
+    };
+    if (previewRuntimeReady) previewFrame.contentWindow.postMessage(message, '*');
+    else queuedConsoleCommands.push(message);
     consoleState.textContent = 'Perintah dijalankan';
   }
 
@@ -708,6 +721,9 @@
     setLintForActiveTab();
     saveWorkspace();
     previewFrame.removeAttribute('srcdoc');
+    previewRuntimeReady = false;
+    queuedConsoleCommands.length = 0;
+    pendingCommands.clear();
     previewWrap.classList.remove('has-content');
     previewEmpty.hidden = false;
     $('#previewState').textContent = 'Belum dijalankan';
