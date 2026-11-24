@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/hint/show-hint.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/lint/lint.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/dialog/dialog.min.css">
-  <link rel="stylesheet" href="style.css?v=20261124-console-autocomplete-v2">
+  <link rel="stylesheet" href="style.css?v=20261124-scroll-shortcuts-v5">
 </head>
 <body>
   <div class="app-shell">
@@ -62,6 +62,7 @@
         <div class="editor-footer">
           <span class="save-status" id="saveStatus"><span class="status-dot"></span> Tersimpan di browser</span>
           <span><span id="lineCount">1</span> baris <span class="footer-separator">·</span> <span id="charCount">0</span> karakter</span>
+          <span class="shortcut-hint" title="Ctrl+/ komentar · Ctrl+F cari · Ctrl+D pilih berikutnya · Alt+↑↓ pindah baris">Ctrl+/ comment · Ctrl+F find · Ctrl+D select</span>
           <button class="problems-toggle" id="problemsToggle" type="button" aria-expanded="false"><span class="problem-icon">●</span> Problems <b id="problemCount">0</b></button>
         </div>
 
@@ -149,6 +150,6 @@
   <script src="https://unpkg.com/prettier@3.10.1/plugins/estree.js"></script>
   <script src="https://unpkg.com/prettier@3.10.1/plugins/html.js"></script>
   <script src="https://unpkg.com/prettier@3.10.1/plugins/postcss.js"></script>
-  <script src="app-console-v4.js?v=20261124-run-button-workspace"></script>
+  <script src="app-editor-v5.js?v=20261124-editor-shortcuts-v5"></script>
 </body>
 </html>
