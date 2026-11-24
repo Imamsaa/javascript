@@ -653,3 +653,33 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   }
   #consolePane .console-suggestion { padding: 8px; font-size: 10px; }
 }
+
+/* Run action stays beside the editor and preview workspace. */
+.editor-tools .run-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 31px;
+  padding: 7px 11px;
+  border-radius: 7px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.editor-tools .run-action kbd {
+  padding: 2px 4px;
+  font-size: 8px;
+}
+@media (max-width: 700px) {
+  .editor-tools .run-action {
+    min-height: 29px;
+    gap: 5px;
+    padding: 6px 8px;
+    font-size: 9px;
+  }
+  .editor-tools .run-action kbd { display: none; }
+}
+@media (max-width: 390px) {
+  .editor-tools .run-action { padding: 6px 7px; }
+  .editor-tools .auto-format span:last-child { max-width: 42px; }
+}
