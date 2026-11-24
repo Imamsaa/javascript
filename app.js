@@ -1199,6 +1199,13 @@
     const workerSource = [
       "self.onmessage = function(event) {",
       "  const data = event.data || {};",
+      "  try {",
+      "    self.fetch = () => Promise.reject(new Error('Network access is disabled during task validation.'));",
+      "    self.importScripts = () => { throw new Error('External scripts are disabled during task validation.'); };",
+      "    self.WebSocket = undefined;",
+      "    self.EventSource = undefined;",
+      "    self.XMLHttpRequest = undefined;",
+      "  } catch (_error) {}",
       "  const logs = [];",
       "  const checks = [];",
       "  const capturedConsole = {",
