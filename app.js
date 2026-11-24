@@ -1165,10 +1165,13 @@
     const statusText = result.passed ? 'Jawaban benar' : 'Masih perlu diperbaiki';
     const passedCount = Array.isArray(result.checks) ? result.checks.filter(item => item.passed).length : 0;
     const totalCount = Array.isArray(result.checks) ? result.checks.length : 0;
+    const scoreLabel = result.passed
+      ? 'Semua kriteria terpenuhi'
+      : totalCount > 0 ? passedCount + '/' + totalCount + ' kriteria' : 'Kode belum dapat diperiksa';
     heading.append(
       createContentNode('span', 'validation-status-icon', result.passed ? '✓' : '!'),
       createContentNode('strong', '', statusText),
-      createContentNode('span', 'validation-score', result.passed ? 'Semua kriteria terpenuhi' : passedCount + '/' + totalCount + ' kriteria')
+      createContentNode('span', 'validation-score', scoreLabel)
     );
     panel.append(heading);
 
