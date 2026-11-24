@@ -19,6 +19,28 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Tombol **Jala
 - ESLint di browser dengan pemeriksaan `no-undef`, `no-unused-vars`, `no-var`, `prefer-const`, `eqeqeq`, dan sejumlah aturan dasar lain.
 - Panel **Problems** menampilkan error/warning dan dapat menavigasikan cursor ke baris terkait.
 
+
+### Shortcut editor
+
+| Shortcut | Aksi |
+|---|---|
+| `Ctrl + Enter` | Jalankan kode |
+| `Ctrl + Space` | Autocomplete |
+| `Ctrl + /` | Comment/uncomment baris atau seleksi |
+| `Ctrl + F` | Cari |
+| `Ctrl + H` | Cari dan ganti |
+| `Ctrl + G` | Lompat ke baris |
+| `Ctrl + D` | Pilih kemunculan berikutnya dari teks/identifier |
+| `Ctrl + L` | Pilih baris aktif |
+| `Ctrl + Shift + K` | Hapus baris aktif/seleksi baris |
+| `Alt + ↑ / ↓` | Pindahkan baris/seleksi |
+| `Shift + Alt + ↑ / ↓` | Duplikasi baris/seleksi |
+| `Tab / Shift + Tab` | Indentasi / outdent |
+| `Shift + Alt + F` | Format kode |
+| `Ctrl + S` | Simpan workspace lokal |
+
+Shortcut memakai tombol Ctrl pada Windows/Linux. Pada macOS, beberapa shortcut memakai Cmd yang juga didukung oleh editor.
+
 ### Preview dan Console
 
 - Jalankan kode dengan tombol **Jalankan** atau `Ctrl + Enter`.
