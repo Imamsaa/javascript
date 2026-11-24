@@ -84,7 +84,7 @@ ESLint saat ini berjalan di browser untuk file JavaScript aktif. Aturan yang dig
 
 ## Keamanan dan batasan preview
 
-- Kode siswa dijalankan pada iframe dengan atribut `sandbox="allow-scripts"` dan Content Security Policy yang membatasi jaringan, objek, dan sumber eksternal. `unsafe-eval` diizinkan hanya di dalam dokumen sandbox untuk mendukung command prompt interaktif; iframe tidak diberi akses same-origin dan koneksi jaringan tetap diblokir.
+- Kode siswa dijalankan pada iframe dengan atribut `sandbox="allow-scripts allow-modals"` agar `alert()`, `confirm()`, dan `prompt()` dapat digunakan, tanpa memberikan akses same-origin dan Content Security Policy yang membatasi jaringan, objek, dan sumber eksternal. `unsafe-eval` diizinkan hanya di dalam dokumen sandbox untuk mendukung command prompt interaktif; iframe tidak diberi akses same-origin dan koneksi jaringan tetap diblokir.
 - Preview bukan lingkungan eksekusi publik yang sepenuhnya aman. Jangan menerima dan menjalankan kode dari pengguna anonim tanpa isolasi tambahan.
 - Kode sinkron yang tidak pernah berhenti, misalnya `while (true) {}`, dapat membuat tab browser tidak responsif. Jangan menguji infinite loop pada browser utama.
 - Kode, nama, dan progres tidak dikirim ke server. Semua penyimpanan workspace berada di browser lokal.
