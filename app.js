@@ -606,6 +606,7 @@
       runToken = makeToken();
       previewRuntimeReady = false;
       queuedConsoleCommands.length = 0;
+      pendingCommands.clear();
       runHadError = false;
       previewWrap.classList.add('has-content');
       previewEmpty.hidden = true;
