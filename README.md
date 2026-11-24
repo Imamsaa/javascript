@@ -62,7 +62,9 @@ Isi ketiga editor dan tab terakhir disimpan otomatis ke `localStorage`. Penyimpa
 
 ## Materi dan Tugas
 
-Materi dan tugas belum ditambahkan. Tombol **Materi** dan **Tugas** menampilkan empty state. Array data tugas di `app.js` juga masih kosong.
+Modul pertama adalah **JavaScript Syntax**, diringkas dan diadaptasi dari [W3Schools — JavaScript Syntax](https://www.w3schools.com/js/js_syntax.asp). Materi membahas aturan sintaks dan komentar, values, literals, keywords, variables, identifiers, operators, expressions, case sensitivity, serta camel case.
+
+Tersedia lima tugas praktik dari tingkat dasar hingga menengah. Tombol **Buka di editor** memuat kerangka tugas ke tab JavaScript. Jika editor JavaScript sudah berisi kode, aplikasi meminta konfirmasi sebelum menggantinya. Siswa menjalankan kode dan mencocokkan hasil pada Console; penilaian belum dilakukan secara otomatis.
 
 ## Menjalankan
 
