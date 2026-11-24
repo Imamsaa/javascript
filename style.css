@@ -757,3 +757,60 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   font-size: 10px;
 }
 .CodeMirror-dialog button:hover { background: rgba(255,255,255,.1); }
+
+
+/* Final bounded layout: the log itself owns vertical scrolling. */
+.output-column { display: block; min-width: 0; }
+.environment-panel {
+  display: flex;
+  height: 670px;
+  min-height: 670px;
+  max-height: 670px;
+  flex-direction: column;
+  overflow: hidden;
+}
+.environment-tabs { flex: 0 0 auto; }
+.environment-pane { flex: 1 1 0%; min-height: 0; }
+.console-pane {
+  display: flex;
+  height: auto;
+  min-height: 0;
+  max-height: 100%;
+  flex: 1 1 0%;
+  flex-direction: column;
+  overflow: hidden;
+}
+.console-pane .console-output {
+  display: block;
+  height: 0;
+  min-height: 0;
+  max-height: none;
+  flex: 1 1 0%;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+.shortcut-hint {
+  color: #71839a;
+  font: 9px var(--mono);
+  white-space: nowrap;
+}
+@media (max-width: 1100px) {
+  .environment-panel {
+    height: 590px;
+    min-height: 590px;
+    max-height: 590px;
+  }
+  .output-column { display: block; }
+}
+@media (max-width: 700px) {
+  .environment-panel {
+    height: 475px;
+    min-height: 475px;
+    max-height: 475px;
+  }
+  .shortcut-hint { display: none; }
+}
