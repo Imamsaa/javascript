@@ -4,7 +4,7 @@ Playground JavaScript untuk latihan pemrograman berbasis browser. Proyek menggun
 
 ## Workspace utama
 
-Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Materi dan Tugas tersedia melalui tombol navigasi terpisah di bagian atas. Keduanya sengaja masih kosong sampai kurikulum disiapkan.
+Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Tombol **Jalankan** berada di toolbar editor agar dekat dengan area kerja. Materi dan Tugas tersedia melalui tombol navigasi terpisah di bagian atas. Keduanya sengaja masih kosong sampai kurikulum disiapkan.
 
 ### Editor
 
