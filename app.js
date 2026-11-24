@@ -3,7 +3,156 @@
 (() => {
   const STORAGE_KEY = 'ict-javascript-playground-workspace-v2';
   const CHANNEL = 'javascript-playground';
-  const TASKS = []; // Materi dan tugas sengaja dikosongkan untuk tahap awal.
+  const MATERIAL = {
+    title: 'JavaScript Syntax',
+    subtitle: 'Mengenal aturan dasar penulisan JavaScript: nilai, variabel, identifier, operator, ekspresi, dan penamaan.',
+    sourceUrl: 'https://www.w3schools.com/js/js_syntax.asp',
+    sections: [
+      {
+        title: 'Aturan sintaks dan komentar',
+        description: 'Sintaks adalah aturan untuk menyusun instruksi program. Contoh berikut membuat dua variabel, menjumlahkannya, lalu memberi komentar sebagai catatan untuk pembaca kode.',
+        code: '// Mendeklarasikan variabel\nlet x = 5;\nlet y = 6;\n\n// Menghitung nilai\nlet z = x + y;\nconsole.log(z);',
+        note: 'Komentar yang diawali // merupakan catatan dan tidak dijalankan sebagai instruksi JavaScript.'
+      },
+      {
+        title: 'JavaScript Values',
+        description: 'Nilai dalam JavaScript pada materi ini dibagi menjadi dua kelompok: literals (nilai tetap yang ditulis langsung) dan variables (nama yang menyimpan nilai).',
+        bullets: [
+          'Literal: nilai yang ditulis langsung, misalnya 10 atau "Halo".',
+          'Variabel: nama seperti nilai atau pesan yang digunakan untuk menyimpan dan mengakses nilai.'
+        ],
+        code: 'let nilai = 10;\nlet pesan = "Halo";\n\nconsole.log(nilai);\nconsole.log(pesan);'
+      },
+      {
+        title: 'JavaScript Literals',
+        description: 'Literal angka dapat ditulis sebagai bilangan bulat maupun desimal. Literal teks (string) ditulis di antara tanda kutip tunggal atau ganda.',
+        code: 'let jumlah = 1001;\nlet harga = 10.50;\nlet nama1 = "John Doe";\nlet nama2 = \'John Doe\';',
+        note: 'Perhatikan bahwa angka ditulis tanpa tanda kutip, sedangkan teks ditulis dengan tanda kutip.'
+      },
+      {
+        title: 'JavaScript Keywords',
+        description: 'Keyword adalah kata khusus yang memiliki arti dalam bahasa JavaScript. Keyword let dan const digunakan untuk membuat variabel.',
+        code: 'let umur = 13;\nconst nama = "Alya";',
+        note: 'Keyword peka terhadap huruf besar dan kecil. LET atau Let tidak dikenali sebagai keyword let.'
+      },
+      {
+        title: 'JavaScript Variables',
+        description: 'Variabel berfungsi sebagai tempat menyimpan nilai. Kamu dapat mendeklarasikan variabel terlebih dahulu, kemudian memberikan nilai kepadanya.',
+        code: '// Deklarasi variabel\nlet skor;\n\n// Memberikan nilai\nskor = 6;\n\nconsole.log(skor);'
+      },
+      {
+        title: 'JavaScript Identifiers',
+        description: 'Identifier adalah nama yang diberikan kepada variabel. Nama ini harus mengikuti aturan penulisan agar dapat dibaca sebagai identifier yang valid.',
+        bullets: [
+          'Harus diawali huruf, garis bawah (_), atau tanda dolar ($).',
+          'Angka boleh digunakan setelah karakter pertama.',
+          'Tidak boleh menggunakan reserved keyword seperti let, const, atau if.',
+          'Peka terhadap huruf besar dan kecil.'
+        ],
+        code: 'let namaSiswa = "Alya";\nlet _nilai = 90;\nlet $total = 15000;\nlet nilai2 = 95;'
+      },
+      {
+        title: 'JavaScript Operators',
+        description: 'Operator assignment (=) memberikan nilai kepada variabel. Operator aritmetika digunakan untuk melakukan perhitungan.',
+        code: 'let x = 5;\nlet y = 6;\nlet jumlah = x + y;\nlet hasilKali = 5 * 10;\n\nconsole.log(jumlah);\nconsole.log(hasilKali);',
+        note: 'Contoh operator aritmetika pada halaman sumber: +, -, *, dan /.'
+      },
+      {
+        title: 'JavaScript Expressions',
+        description: 'Expression (ekspresi) adalah gabungan nilai, variabel, dan operator yang menghasilkan sebuah nilai.',
+        code: 'let x = 5;\n\nconsole.log((5 + 6) * 10);\nconsole.log(x * 10);\nconsole.log("John" + " " + "Doe");',
+        note: 'Ekspresi dapat menghasilkan angka maupun teks, bergantung pada nilai dan operator yang digunakan.'
+      },
+      {
+        title: 'JavaScript is Case Sensitive',
+        description: 'Nama identifier membedakan huruf besar dan kecil. Karena itu, lastName dan lastname merupakan dua nama variabel yang berbeda.',
+        code: 'let lastName = "Doe";\nlet lastname = "Peterson";\n\nconsole.log(lastName);\nconsole.log(lastname);'
+      },
+      {
+        title: 'JavaScript and Camel Case',
+        description: 'Nama variabel dapat menggabungkan beberapa kata dengan pola penulisan yang berbeda. Tanda hubung (-) tidak boleh digunakan dalam nama variabel karena dipakai sebagai operator pengurangan.',
+        bullets: [
+          'Underscore: first_name',
+          'Upper Camel Case / Pascal Case: FirstName',
+          'Lower Camel Case: firstName',
+          'W3Schools menyebutkan bahwa programmer JavaScript cenderung menggunakan lower camel case.'
+        ],
+        code: 'let first_name = "John";\nlet FirstName = "John";\nlet firstName = "John";',
+        note: 'Untuk latihan ini, biasakan memakai lower camel case, misalnya namaSiswa atau totalBelanja.'
+      }
+    ]
+  };
+
+  const TASKS = [
+    {
+      title: 'Membuat Variabel dan Menghitung Jumlah',
+      level: 'Dasar',
+      focus: 'Sintaks, deklarasi variabel, assignment, dan operator +',
+      description: 'Lengkapi kode agar program menjumlahkan dua angka yang disimpan dalam variabel.',
+      requirements: [
+        'Gunakan let untuk membuat variabel x dan y.',
+        'Buat variabel z yang berisi hasil penjumlahan x dan y.',
+        'Tampilkan hasilnya menggunakan console.log().'
+      ],
+      starterCode: '// TUGAS 1: Variabel dan penjumlahan\nlet x = 5;\nlet y = 6;\n\n// Buat variabel z untuk menyimpan hasil x + y\n\nconsole.log("Hasil:", z);',
+      expected: 'Hasil: 11'
+    },
+    {
+      title: 'Mengenali Literal Angka dan Teks',
+      level: 'Dasar',
+      focus: 'Values, literals, let, dan const',
+      description: 'Buat data sederhana tentang seorang siswa dengan literal string, bilangan bulat, dan bilangan desimal.',
+      requirements: [
+        'Isi namaSiswa dengan literal string di antara tanda kutip.',
+        'Simpan umur sebagai angka bulat dan nilai sebagai angka desimal.',
+        'Gunakan console.log() untuk menampilkan ketiga data.'
+      ],
+      starterCode: '// TUGAS 2: Literal angka dan teks\nconst namaSiswa = "Nama Kamu";\nlet umur = 13;\nconst nilai = 85.5;\n\nconsole.log("Nama:", namaSiswa);\nconsole.log("Umur:", umur);\nconsole.log("Nilai:", nilai);',
+      expected: 'Console menampilkan nama, umur, dan nilai sesuai data yang kamu masukkan.'
+    },
+    {
+      title: 'Memperbaiki Nama Identifier',
+      level: 'Menengah',
+      focus: 'Aturan identifier dan keyword',
+      description: 'Kode awal sengaja memiliki nama variabel yang tidak valid. Perbaiki agar program dapat dijalankan.',
+      requirements: [
+        'Nama identifier tidak boleh diawali angka.',
+        'Jangan gunakan tanda hubung (-) dalam nama variabel.',
+        'Gunakan nama valid seperti nilai2 dan namaSiswa.',
+        'Jalankan program dan pastikan kedua nilai tampil di Console.'
+      ],
+      starterCode: '// TUGAS 3: Perbaiki identifier yang tidak valid\nlet 2nilai = 90;\nlet nama-siswa = "Alya";\n\nconsole.log(2nilai);\nconsole.log(nama-siswa);',
+      expected: 'Program berjalan tanpa SyntaxError dan menampilkan 90 serta Alya.'
+    },
+    {
+      title: 'Membuat Ekspresi JavaScript',
+      level: 'Menengah',
+      focus: 'Operator aritmetika dan expressions',
+      description: 'Amati beberapa ekspresi, lalu buat satu ekspresi perhitungan sendiri.',
+      requirements: [
+        'Jalankan ekspresi (5 + 6) * 10 dan amati hasilnya.',
+        'Gunakan variabel angka untuk menghitung angka * 10.',
+        'Gabungkan dua atau tiga string menggunakan operator +.',
+        'Tambahkan satu ekspresi perhitungan buatanmu sendiri.'
+      ],
+      starterCode: '// TUGAS 4: Expressions\nlet angka = 5;\n\nconsole.log("Ekspresi 1:", (5 + 6) * 10);\nconsole.log("Ekspresi 2:", angka * 10);\nconsole.log("Gabungan teks:", "Java" + "Script");\n\n// Tambahkan satu ekspresi buatanmu di bawah ini\n',
+      expected: 'Hasil awal yang tampil: 110, 50, dan JavaScript. Ekspresi tambahan sesuai buatanmu.'
+    },
+    {
+      title: 'Case Sensitive dan Camel Case',
+      level: 'Menengah',
+      focus: 'Case sensitivity dan konvensi penamaan',
+      description: 'Buktikan bahwa huruf besar dan kecil membedakan identifier, lalu praktikkan lower camel case.',
+      requirements: [
+        'Buat variabel lastName dan lastname dengan isi yang berbeda.',
+        'Tampilkan kedua variabel untuk membuktikan bahwa keduanya berbeda.',
+        'Buat tiga nama variabel gabungan kata dengan pola first_name, FirstName, dan firstName.',
+        'Tambahkan satu nama variabel lower camel case buatanmu sendiri.'
+      ],
+      starterCode: '// TUGAS 5: Case sensitive dan camel case\nlet lastName = "Doe";\nlet lastname = "Peterson";\nlet first_name = "John";\nlet FirstName = "Jane";\nlet firstName = "Alya";\n\nconsole.log(lastName);\nconsole.log(lastname);\nconsole.log(first_name);\nconsole.log(FirstName);\nconsole.log(firstName);\n',
+      expected: 'Console menampilkan nilai masing-masing variabel. lastName dan lastname menghasilkan nilai yang berbeda.'
+    }
+  ];
   const $ = (selector) => document.querySelector(selector);
   const textarea = $('#codeEditor');
   const previewFrame = $('#previewFrame');
@@ -878,14 +1027,132 @@
     $('#problemsToggle').setAttribute('aria-expanded', String(problemsOpen));
   }
 
+  function createContentNode(tagName, className, text) {
+    const node = document.createElement(tagName);
+    if (className) node.className = className;
+    if (typeof text === 'string') node.textContent = text;
+    return node;
+  }
+
+  function renderMaterialContent(target) {
+    const hero = createContentNode('section', 'material-hero');
+    hero.append(
+      createContentNode('span', 'content-eyebrow', 'MODUL 01 · DASAR JAVASCRIPT'),
+      createContentNode('h3', 'material-hero-title', MATERIAL.title),
+      createContentNode('p', 'material-hero-description', MATERIAL.subtitle),
+      createContentNode('p', 'material-hero-meta', MATERIAL.sections.length + ' subtopik · Ringkasan dan contoh kode')
+    );
+    target.append(hero);
+
+    const sectionGrid = createContentNode('div', 'lesson-grid');
+    MATERIAL.sections.forEach((section, index) => {
+      const card = createContentNode('article', 'lesson-card');
+      const heading = createContentNode('div', 'lesson-card-heading');
+      heading.append(
+        createContentNode('span', 'lesson-number', String(index + 1).padStart(2, '0')),
+        createContentNode('h3', 'lesson-card-title', section.title)
+      );
+      card.append(heading, createContentNode('p', 'lesson-description', section.description));
+
+      if (Array.isArray(section.bullets) && section.bullets.length) {
+        const list = createContentNode('ul', 'lesson-points');
+        section.bullets.forEach((point) => list.append(createContentNode('li', '', point)));
+        card.append(list);
+      }
+
+      if (section.code) {
+        const code = createContentNode('pre', 'lesson-code');
+        code.append(createContentNode('code', '', section.code));
+        card.append(code);
+      }
+
+      if (section.note) card.append(createContentNode('p', 'lesson-note', section.note));
+      sectionGrid.append(card);
+    });
+    target.append(sectionGrid);
+
+    const source = createContentNode('div', 'source-credit');
+    source.append(createContentNode('span', '', 'Materi diringkas dan diadaptasi dari '));
+    const link = createContentNode('a', '', 'W3Schools — JavaScript Syntax');
+    link.href = MATERIAL.sourceUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    source.append(link);
+    target.append(source);
+  }
+
+  function renderTaskContent(target) {
+    const intro = createContentNode('section', 'tasks-intro');
+    intro.append(
+      createContentNode('h3', '', 'Latihan JavaScript Syntax'),
+      createContentNode('p', '', 'Kerjakan tugas secara berurutan. Baca instruksi, buka kerangka kode di editor, lengkapi, lalu tekan Jalankan dan periksa hasilnya pada Console.')
+    );
+    target.append(intro);
+
+    TASKS.forEach((task, index) => {
+      const card = createContentNode('article', 'task-card');
+      const top = createContentNode('div', 'task-card-top');
+      const titleWrap = createContentNode('div', 'task-title-wrap');
+      titleWrap.append(
+        createContentNode('span', 'task-index', 'TUGAS ' + (index + 1)),
+        createContentNode('h3', '', task.title)
+      );
+      top.append(titleWrap, createContentNode('span', 'task-level', task.level));
+      card.append(top);
+      card.append(createContentNode('p', 'task-focus', task.focus));
+      card.append(createContentNode('p', 'task-description', task.description));
+
+      const list = createContentNode('ol', 'task-requirements');
+      task.requirements.forEach((requirement) => list.append(createContentNode('li', '', requirement)));
+      card.append(list);
+
+      const expected = createContentNode('p', 'task-expected');
+      expected.append(createContentNode('strong', '', 'Target hasil: '), document.createTextNode(task.expected));
+      card.append(expected);
+
+      const actions = createContentNode('div', 'task-actions');
+      const startButton = createContentNode('button', 'button button-primary task-start', 'Buka di editor');
+      startButton.type = 'button';
+      startButton.addEventListener('click', () => loadTaskInEditor(task));
+      actions.append(startButton);
+      card.append(actions);
+      target.append(card);
+    });
+
+    target.append(createContentNode('p', 'task-disclaimer', 'Pemeriksaan tugas dilakukan dengan menjalankan kode dan mencocokkan hasilnya di Console. Playground belum memberikan nilai otomatis.'));
+  }
+
+  function loadTaskInEditor(task) {
+    const currentJavaScript = activeTab === 'js' ? getEditorValue() : editors.js.value;
+    if (currentJavaScript.trim() && !window.confirm('Kode JavaScript yang sedang tersimpan akan diganti dengan kerangka tugas ini. Lanjutkan?')) return;
+
+    editors[activeTab].value = getEditorValue();
+    editors.js.value = task.starterCode;
+    activeTab = 'js';
+    setEditorValue(editors.js.value);
+    textarea.placeholder = editors.js.placeholder;
+    if (codeEditor) {
+      codeEditor.setOption('mode', editors.js.mode);
+      codeEditor.setCursor({ line: 0, ch: 0 });
+      codeEditor.refresh();
+      codeEditor.focus();
+    }
+    updateEditorStats();
+    setLintForActiveTab();
+    scheduleSave();
+    $('#contentDialog').close();
+    showToast('Kerangka tugas dimuat ke editor JavaScript.');
+  }
+
   function openContentDialog(type) {
     const isTask = type === 'tasks';
     $('#dialogKicker').textContent = isTask ? 'LATIHAN PRAKTIK' : 'PEMBELAJARAN';
     $('#dialogTitle').textContent = isTask ? 'Tugas' : 'Materi';
-    $('#dialogEmptyTitle').textContent = isTask ? 'Belum ada tugas' : 'Belum ada materi';
-    $('#dialogDescription').textContent = isTask
-      ? 'Daftar tugas praktik JavaScript akan ditampilkan di sini setelah disusun.'
-      : 'Materi pembelajaran JavaScript akan ditambahkan setelah struktur kurikulum disiapkan.';
+    const content = $('#dialogContent');
+    content.replaceChildren();
+    if (isTask) renderTaskContent(content);
+    else renderMaterialContent(content);
+
     const dialog = $('#contentDialog');
     if (typeof dialog.showModal === 'function') dialog.showModal();
     else dialog.setAttribute('open', '');
@@ -1159,7 +1426,7 @@
   updateEditorStats();
   renderProblems([]);
   setEnvironmentTab('preview');
-  $('#materialsBtn .nav-count').textContent = '0';
+  $('#materialsBtn .nav-count').textContent = '1';
   $('#tasksBtn .nav-count').textContent = String(TASKS.length);
   if (!linter) {
     $('#problemsToggle').title = 'ESLint belum termuat. Periksa koneksi internet.';
