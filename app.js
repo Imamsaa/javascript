@@ -377,7 +377,7 @@
 
     return '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; font-src data:; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'">' +
-      '</head><body>' + html + '<script>' + script + '<\\/script></body></html>';
+      '</head><body>' + html + '<script>' + script + '<' + '/script></body></html>';
   }
 
   function makeToken() {
