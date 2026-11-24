@@ -25,7 +25,8 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Materi dan Tu
 - HTML dan CSS membentuk tampilan preview.
 - JavaScript dieksekusi di dalam iframe sandbox terpisah.
 - Console menangkap `log`, `info`, `warn`, `error`, runtime error, dan unhandled promise rejection.
-- Console dapat dibuka/tutup dan dibersihkan.
+- **Live Environment** menggunakan dua tab: **Preview** dan **Console**. Masing-masing memakai area tampilan yang sama sehingga Preview dapat dilihat penuh tanpa panel Console, dan sebaliknya.
+- Console tetap merekam output meskipun tab Console tidak sedang aktif; jumlah output ditampilkan pada badge tab.
 
 ### Penyimpanan
 
