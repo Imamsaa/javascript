@@ -511,3 +511,93 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   .console-command-form textarea { font-size: 10px; }
   .console-submit { width: 23px; height: 23px; flex-basis: 23px; }
 }
+
+/* Explicit reset for the Console command bar (also neutralizes browser-native textarea/button UI). */
+#consolePane #consoleCommandForm {
+  display: flex !important;
+  width: 100%;
+  min-height: 52px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 0;
+  border-top: 1px solid rgba(148,163,184,.15);
+  border-radius: 0;
+  background: #0d1929;
+}
+#consolePane #consoleCommandForm .console-prompt {
+  display: block;
+  flex: 0 0 14px;
+  width: 14px;
+  padding: 0;
+  color: #67d6a3;
+  font: 16px/1.4 var(--mono);
+  text-align: center;
+}
+#consolePane #consoleCommandInput {
+  display: block;
+  flex: 1 1 0%;
+  width: 0;
+  min-width: 0;
+  height: 25px;
+  min-height: 25px;
+  max-height: 112px;
+  margin: 0;
+  padding: 3px 0;
+  resize: none !important;
+  overflow-y: auto;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  color: #e6edf7;
+  caret-color: #f5c84c;
+  background: transparent !important;
+  font: 12px/1.55 var(--mono);
+}
+#consolePane #consoleCommandInput:focus {
+  outline: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#consolePane #consoleCommandInput::placeholder {
+  color: #6f829b;
+  opacity: 1;
+}
+#consolePane .console-submit {
+  display: grid;
+  flex: 0 0 29px;
+  width: 29px;
+  height: 29px;
+  min-width: 29px;
+  min-height: 29px;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(85,214,164,.3) !important;
+  border-radius: 7px;
+  color: #70dfae;
+  background: rgba(85,214,164,.1) !important;
+  box-shadow: none;
+  cursor: pointer;
+  font: 15px var(--mono);
+}
+#consolePane .console-submit:hover {
+  border-color: #55d6a4 !important;
+  color: #0b1720;
+  background: #55d6a4 !important;
+}
+#consolePane .console-submit:focus-visible {
+  outline: 2px solid #f5c84c;
+  outline-offset: 2px;
+}
+@media (max-width: 700px) {
+  #consolePane #consoleCommandForm { min-height: 49px; padding: 9px 10px; gap: 8px; }
+  #consolePane #consoleCommandInput { font-size: 11px; }
+}
