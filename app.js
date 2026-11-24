@@ -518,11 +518,17 @@
     if (runButton.disabled) return;
     runButton.disabled = true;
     const originalLabel = runButton.innerHTML;
-    runButton.textContent = 'Menyiapkan…';
+
     try {
+      // Keep Run responsive: formatting is optional and only touches the active file.
       editors[activeTab].value = getEditorValue();
-      if ($('#formatOnRun').checked) await formatWorkspace();
-      editors[activeTab].value = getEditorValue();
+      if ($('#formatOnRun').checked && getEditorValue().trim()) {
+        const formatted = await formatValue(activeTab, getEditorValue());
+        setEditorValue(formatted);
+        editors[activeTab].value = formatted;
+        refreshLint();
+      }
+
       saveWorkspace();
       clearConsole();
       consoleState.textContent = 'Sedang dijalankan…';
@@ -536,7 +542,7 @@
       appendConsole('info', ['Menjalankan JavaScript…'], 'RUN');
       if ($('#consolePanel').classList.contains('collapsed')) toggleConsole(true);
     } catch (error) {
-      showToast('Tidak dapat menjalankan kode: ' + (error.message || error));
+      showToast('Format atau eksekusi gagal: ' + (error.message || error));
     } finally {
       runButton.disabled = false;
       runButton.innerHTML = originalLabel;
