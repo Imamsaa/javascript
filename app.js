@@ -2,6 +2,7 @@
 
 (() => {
   const STORAGE_KEY = 'ict-javascript-playground-workspace-v2';
+  const TASK_PROGRESS_KEY = 'ict-javascript-playground-task-progress-v1';
   const CHANNEL = 'javascript-playground';
   const MATERIAL = {
     title: 'JavaScript Syntax',
@@ -95,7 +96,8 @@
         'Tampilkan hasilnya menggunakan console.log().'
       ],
       starterCode: '// TUGAS 1: Variabel dan penjumlahan\nlet x = 5;\nlet y = 6;\n\n// Buat variabel z untuk menyimpan hasil x + y\n\nconsole.log("Hasil:", z);',
-      expected: 'Hasil: 11'
+      expected: 'Hasil: 11',
+      validation: "__jpCheck('Variabel x menggunakan let dan bernilai 5', /\\blet\\s+x\\b/.test(__jpSource) && typeof x !== 'undefined' && x === 5);\n__jpCheck('Variabel y menggunakan let dan bernilai 6', /\\blet\\s+y\\b/.test(__jpSource) && typeof y !== 'undefined' && y === 6);\n__jpCheck('Variabel z berisi hasil x + y, yaitu 11', typeof z !== 'undefined' && z === x + y && z === 11);\n__jpCheck('Hasil penjumlahan ditampilkan dengan console.log()', __jpLogs.some(args => args.map(String).join(' ').includes('Hasil') && args.map(String).join(' ').includes('11')));",
     },
     {
       title: 'Mengenali Literal Angka dan Teks',
@@ -108,7 +110,8 @@
         'Gunakan console.log() untuk menampilkan ketiga data.'
       ],
       starterCode: '// TUGAS 2: Literal angka dan teks\nconst namaSiswa = "Nama Kamu";\nlet umur = 13;\nconst nilai = 85.5;\n\nconsole.log("Nama:", namaSiswa);\nconsole.log("Umur:", umur);\nconsole.log("Nilai:", nilai);',
-      expected: 'Console menampilkan nama, umur, dan nilai sesuai data yang kamu masukkan.'
+      expected: 'Console menampilkan nama, umur, dan nilai sesuai data yang kamu masukkan.',
+      validation: "__jpCheck('namaSiswa berisi teks yang tidak kosong', typeof namaSiswa === 'string' && namaSiswa.trim().length > 0 && namaSiswa !== 'Nama Kamu');\n__jpCheck('umur disimpan sebagai bilangan bulat', typeof umur === 'number' && Number.isInteger(umur));\n__jpCheck('nilai disimpan sebagai angka', typeof nilai === 'number' && Number.isFinite(nilai));\nconst __jpTask2Output = __jpLogs.map(args => args.map(String).join(' ')).join(' ');\n__jpCheck('Nama, umur, dan nilai ditampilkan di Console', __jpTask2Output.includes(String(namaSiswa)) && __jpTask2Output.includes(String(umur)) && __jpTask2Output.includes(String(nilai)));",
     },
     {
       title: 'Memperbaiki Nama Identifier',
@@ -122,7 +125,8 @@
         'Jalankan program dan pastikan kedua nilai tampil di Console.'
       ],
       starterCode: '// TUGAS 3: Perbaiki identifier yang tidak valid\nlet 2nilai = 90;\nlet nama-siswa = "Alya";\n\nconsole.log(2nilai);\nconsole.log(nama-siswa);',
-      expected: 'Program berjalan tanpa SyntaxError dan menampilkan 90 serta Alya.'
+      expected: 'Program berjalan tanpa SyntaxError dan menampilkan 90 serta Alya.',
+      validation: "__jpCheck('Identifier nilai2 valid dan bernilai 90', typeof nilai2 !== 'undefined' && nilai2 === 90);\n__jpCheck('Identifier namaSiswa valid dan berisi Alya', typeof namaSiswa !== 'undefined' && namaSiswa === 'Alya');\nconst __jpTask3Output = __jpLogs.map(args => args.map(String).join(' ')).join(' ');\n__jpCheck('Kedua nilai ditampilkan di Console', __jpTask3Output.includes('90') && __jpTask3Output.includes('Alya'));",
     },
     {
       title: 'Membuat Ekspresi JavaScript',
@@ -136,7 +140,8 @@
         'Tambahkan satu ekspresi perhitungan buatanmu sendiri.'
       ],
       starterCode: '// TUGAS 4: Expressions\nlet angka = 5;\n\nconsole.log("Ekspresi 1:", (5 + 6) * 10);\nconsole.log("Ekspresi 2:", angka * 10);\nconsole.log("Gabungan teks:", "Java" + "Script");\n\n// Tambahkan satu ekspresi buatanmu di bawah ini\n',
-      expected: 'Hasil awal yang tampil: 110, 50, dan JavaScript. Ekspresi tambahan sesuai buatanmu.'
+      expected: 'Hasil awal yang tampil: 110, 50, dan JavaScript. Ekspresi tambahan sesuai buatanmu.',
+      validation: "const __jpTask4Output = __jpLogs.map(args => args.map(String).join(' ')).join(' ');\n__jpCheck('Ekspresi (5 + 6) * 10 menghasilkan 110', __jpLogs.some(args => args.some(value => value === 110)) || __jpTask4Output.includes('110'));\n__jpCheck('Ekspresi angka * 10 menghasilkan 50', __jpLogs.some(args => args.some(value => value === 50)) || __jpTask4Output.includes('50'));\n__jpCheck('Penggabungan teks menghasilkan JavaScript', __jpTask4Output.includes('JavaScript'));\n__jpCheck('Ada satu ekspresi tambahan yang kamu tampilkan', __jpLogs.length >= 4);",
     },
     {
       title: 'Case Sensitive dan Camel Case',
@@ -150,7 +155,8 @@
         'Tambahkan satu nama variabel lower camel case buatanmu sendiri.'
       ],
       starterCode: '// TUGAS 5: Case sensitive dan camel case\nlet lastName = "Doe";\nlet lastname = "Peterson";\nlet first_name = "John";\nlet FirstName = "Jane";\nlet firstName = "Alya";\n\nconsole.log(lastName);\nconsole.log(lastname);\nconsole.log(first_name);\nconsole.log(FirstName);\nconsole.log(firstName);\n',
-      expected: 'Console menampilkan nilai masing-masing variabel. lastName dan lastname menghasilkan nilai yang berbeda.'
+      expected: 'Console menampilkan nilai masing-masing variabel. lastName dan lastname menghasilkan nilai yang berbeda.',
+      validation: "__jpCheck('lastName dan lastname memiliki nilai berbeda', typeof lastName === 'string' && typeof lastname === 'string' && lastName !== lastname);\n__jpCheck('Variabel first_name, FirstName, dan firstName dibuat', typeof first_name !== 'undefined' && typeof FirstName !== 'undefined' && typeof firstName !== 'undefined');\nconst __jpTask5Output = __jpLogs.map(args => args.map(String).join(' ')).join(' ');\n__jpCheck('Nilai lastName dan lastname ditampilkan', __jpTask5Output.includes(String(lastName)) && __jpTask5Output.includes(String(lastname)));\nconst __jpCamelNames = Array.from(__jpSource.matchAll(/\\b(?:let|const|var)\\s+([a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*)\\s*=/g), match => match[1]).filter(name => !['lastName', 'firstName'].includes(name));\n__jpCheck('Ada satu nama variabel lower camel case buatanmu sendiri', __jpCamelNames.length >= 1);",
     }
   ];
   const $ = (selector) => document.querySelector(selector);
@@ -198,6 +204,7 @@
     sessionStorage: ['getItem','setItem','removeItem','clear','key','length']
   };
 
+  let taskProgress = {};
   let activeTab = 'js';
   let codeEditor = null;
   let saveTimer = null;
@@ -1085,7 +1092,7 @@
     const intro = createContentNode('section', 'tasks-intro');
     intro.append(
       createContentNode('h3', '', 'Latihan JavaScript Syntax'),
-      createContentNode('p', '', 'Kerjakan tugas secara berurutan. Baca instruksi, buka kerangka kode di editor, lengkapi, lalu tekan Jalankan dan periksa hasilnya pada Console.')
+      createContentNode('p', '', 'Buka kerangka kode, selesaikan instruksi, lalu tekan Periksa Jawaban. Pemeriksaan akan menjalankan kode di lingkungan terpisah dan menilai setiap kriteria tugas.')
     );
     target.append(intro);
 
@@ -1111,17 +1118,156 @@
       card.append(expected);
 
       const actions = createContentNode('div', 'task-actions');
-      const startButton = createContentNode('button', 'button button-primary task-start', 'Buka di editor');
+      const startButton = createContentNode('button', 'button button-ghost task-start', 'Buka di editor');
       startButton.type = 'button';
       startButton.addEventListener('click', () => loadTaskInEditor(task));
-      actions.append(startButton);
+      const checkButton = createContentNode('button', 'button button-primary task-check', 'Periksa Jawaban');
+      checkButton.type = 'button';
+      checkButton.addEventListener('click', () => validateTask(index, resultPanel, checkButton));
+      actions.append(startButton, checkButton);
       card.append(actions);
+
+      const resultPanel = createContentNode('section', 'task-validation-result');
+      resultPanel.hidden = true;
+      card.append(resultPanel);
+      if (taskProgress[index]) renderTaskValidationResult(resultPanel, taskProgress[index]);
       target.append(card);
     });
 
-    target.append(createContentNode('p', 'task-disclaimer', 'Pemeriksaan tugas dilakukan dengan menjalankan kode dan mencocokkan hasilnya di Console. Playground belum memberikan nilai otomatis.'));
+    target.append(createContentNode('p', 'task-disclaimer', 'Status tugas tersimpan di browser/perangkat ini. Hasil pemeriksaan bukan bukti anti-menyontek dan belum dikirim kepada guru atau server.'));
   }
 
+  function restoreTaskProgress() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(TASK_PROGRESS_KEY) || '{}');
+      if (saved && typeof saved === 'object' && !Array.isArray(saved)) taskProgress = saved;
+    } catch (error) {
+      console.warn('Progres tugas tidak dapat dibaca:', error);
+      taskProgress = {};
+    }
+  }
+
+  function saveTaskProgress() {
+    try {
+      localStorage.setItem(TASK_PROGRESS_KEY, JSON.stringify(taskProgress));
+    } catch (error) {
+      console.warn('Progres tugas tidak dapat disimpan:', error);
+      showToast('Progres tugas tidak berhasil disimpan di browser.');
+    }
+  }
+
+  function renderTaskValidationResult(panel, result) {
+    panel.replaceChildren();
+    panel.hidden = false;
+    panel.className = 'task-validation-result ' + (result.passed ? 'is-correct' : 'needs-revision');
+
+    const heading = createContentNode('div', 'validation-heading');
+    const statusText = result.passed ? 'Jawaban benar' : 'Masih perlu diperbaiki';
+    const passedCount = Array.isArray(result.checks) ? result.checks.filter(item => item.passed).length : 0;
+    const totalCount = Array.isArray(result.checks) ? result.checks.length : 0;
+    heading.append(
+      createContentNode('span', 'validation-status-icon', result.passed ? '✓' : '!'),
+      createContentNode('strong', '', statusText),
+      createContentNode('span', 'validation-score', result.passed ? 'Semua kriteria terpenuhi' : passedCount + '/' + totalCount + ' kriteria')
+    );
+    panel.append(heading);
+
+    if (result.message) panel.append(createContentNode('p', 'validation-message', result.message));
+    if (Array.isArray(result.checks) && result.checks.length) {
+      const list = createContentNode('ul', 'validation-checks');
+      result.checks.forEach((item) => {
+        const row = createContentNode('li', item.passed ? 'validation-check passed' : 'validation-check failed');
+        row.append(
+          createContentNode('span', 'validation-check-icon', item.passed ? '✓' : '×'),
+          createContentNode('span', '', item.label)
+        );
+        list.append(row);
+      });
+      panel.append(list);
+    }
+    if (result.checkedAt) panel.append(createContentNode('p', 'validation-time', 'Diperiksa: ' + new Date(result.checkedAt).toLocaleString('id-ID')));
+  }
+
+  function validateTask(index, resultPanel, button) {
+    const task = TASKS[index];
+    const source = activeTab === 'js' ? getEditorValue() : editors.js.value;
+    if (!source.trim()) {
+      showToast('Editor JavaScript masih kosong. Buka tugas lalu kerjakan terlebih dahulu.');
+      return;
+    }
+
+    const workerSource = [
+      "self.onmessage = function(event) {",
+      "  const data = event.data || {};",
+      "  const logs = [];",
+      "  const checks = [];",
+      "  const capturedConsole = {",
+      "    log: (...args) => logs.push(args),",
+      "    info: (...args) => logs.push(args),",
+      "    warn: (...args) => logs.push(args),",
+      "    error: (...args) => logs.push(args),",
+      "    table: (value) => logs.push([value]),",
+      "    clear: () => { logs.length = 0; }",
+      "  };",
+      "  const check = (label, passed) => checks.push({ label: label, passed: Boolean(passed) });",
+      "  try {",
+      "    const execute = new Function('__jpLogs', '__jpCheck', '__jpSource', 'console', String(data.code || '') + '\\n' + String(data.validation || '') + '\\nreturn { checks: checks, passed: checks.length > 0 && checks.every(item => item.passed) };');",
+      "    const result = execute(logs, check, String(data.code || ''), capturedConsole);",
+      "    self.postMessage({ type: 'result', result: result });",
+      "  } catch (error) {",
+      "    self.postMessage({ type: 'error', message: error && error.message ? error.message : String(error) });",
+      "  }",
+      "};"
+    ].join("\n");
+
+    const workerUrl = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }));
+    let worker;
+    let timeoutId;
+    let completed = false;
+    button.disabled = true;
+    button.textContent = 'Memeriksa...';
+
+    const finish = (result) => {
+      if (completed) return;
+      completed = true;
+      clearTimeout(timeoutId);
+      if (worker) worker.terminate();
+      URL.revokeObjectURL(workerUrl);
+      button.disabled = false;
+      button.textContent = 'Periksa Lagi';
+      result.checkedAt = Date.now();
+      taskProgress[index] = result;
+      saveTaskProgress();
+      renderTaskValidationResult(resultPanel, result);
+    };
+
+    try {
+      worker = new Worker(workerUrl);
+      worker.onmessage = (event) => {
+        const data = event.data || {};
+        if (data.type === 'result') {
+          finish({
+            passed: Boolean(data.result && data.result.passed),
+            checks: data.result && Array.isArray(data.result.checks) ? data.result.checks : [],
+            message: data.result && data.result.passed
+              ? 'Bagus! Seluruh kriteria tugas ini sudah terpenuhi.'
+              : 'Perhatikan kriteria yang belum terpenuhi, perbaiki kode, lalu lakukan pemeriksaan ulang.'
+          });
+        } else {
+          finish({ passed: false, checks: [], message: 'Kode mengalami error: ' + (data.message || 'Kesalahan tidak diketahui.') });
+        }
+      };
+      worker.onerror = (event) => {
+        finish({ passed: false, checks: [], message: 'Kode tidak dapat dijalankan: ' + (event.message || 'periksa kembali sintaks JavaScript.') });
+      };
+      timeoutId = window.setTimeout(() => {
+        finish({ passed: false, checks: [], message: 'Pemeriksaan dihentikan karena kode berjalan lebih dari 1,5 detik. Periksa kemungkinan infinite loop.' });
+      }, 1500);
+      worker.postMessage({ code: source, validation: task.validation });
+    } catch (error) {
+      finish({ passed: false, checks: [], message: 'Fitur pemeriksaan tidak dapat dimulai: ' + (error.message || error) });
+    }
+  }
   function loadTaskInEditor(task) {
     const currentJavaScript = activeTab === 'js' ? getEditorValue() : editors.js.value;
     if (currentJavaScript.trim() && !window.confirm('Kode JavaScript yang sedang tersimpan akan diganti dengan kerangka tugas ini. Lanjutkan?')) return;
@@ -1422,6 +1568,7 @@
   window.addEventListener('message', handlePreviewMessage);
 
   restoreWorkspace();
+  restoreTaskProgress();
   initializeCodeMirror();
   updateEditorStats();
   renderProblems([]);
