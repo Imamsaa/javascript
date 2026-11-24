@@ -953,7 +953,8 @@
     const anchorLine = direction < 0 ? fromLine : toLine + 1;
     if (direction < 0) {
       cm.replaceRange(block.join('\n') + '\n', { line: fromLine, ch: 0 }, { line: fromLine, ch: 0 }, '+duplicateLine');
-      cm.setSelection({ line: fromLine, ch: 0 }, { line: toLine, ch: cm.getLine(toLine).length });
+      const duplicateEnd = fromLine + block.length - 1;
+      cm.setSelection({ line: fromLine, ch: 0 }, { line: duplicateEnd, ch: cm.getLine(duplicateEnd).length });
     } else {
       const end = { line: toLine, ch: cm.getLine(toLine).length };
       cm.replaceRange('\n' + block.join('\n'), end, end, '+duplicateLine');
@@ -968,25 +969,27 @@
     const targetLine = fromLine + direction;
     if (targetLine < 0 || targetLine >= cm.lineCount()) return;
 
+    const oldAnchor = cm.getCursor('anchor');
+    const oldHead = cm.getCursor('head');
     const lines = [];
     for (let line = 0; line < cm.lineCount(); line += 1) lines.push(cm.getLine(line));
     const block = lines.splice(fromLine, toLine - fromLine + 1);
     lines.splice(direction < 0 ? fromLine - 1 : fromLine + 1, 0, ...block);
 
-    const selectedText = block.join('\n');
     const docEnd = { line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length };
     cm.replaceRange(lines.join('\n'), { line: 0, ch: 0 }, docEnd, '+moveLine');
 
-    const nextFrom = fromLine + direction;
-    const lastOffset = block.length - 1;
-    const maxCh = (line, ch) => Math.min(ch, cm.getLine(line).length);
-    const head = cm.getCursor('head');
-    const anchor = cm.getCursor('anchor');
-    const oldHeadLine = Math.max(fromLine, Math.min(toLine, head.line));
-    const oldAnchorLine = Math.max(fromLine, Math.min(toLine, anchor.line));
+    const mapMovedLine = (line) => {
+      if (line >= fromLine && line <= toLine) return line + direction;
+      if (direction < 0 && line === fromLine - 1) return toLine;
+      if (direction > 0 && line === toLine + 1) return fromLine;
+      return line;
+    };
+    const mappedAnchor = mapMovedLine(oldAnchor.line);
+    const mappedHead = mapMovedLine(oldHead.line);
     cm.setSelection(
-      { line: nextFrom + (oldAnchorLine - fromLine), ch: maxCh(nextFrom + (oldAnchorLine - fromLine), anchor.ch) },
-      { line: nextFrom + (oldHeadLine - fromLine), ch: maxCh(nextFrom + (oldHeadLine - fromLine), head.ch) }
+      { line: mappedAnchor, ch: Math.min(oldAnchor.ch, cm.getLine(mappedAnchor).length) },
+      { line: mappedHead, ch: Math.min(oldHead.ch, cm.getLine(mappedHead).length) }
     );
   }
 
