@@ -27,6 +27,7 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Materi dan Tu
 - Console menampilkan nilai `console.log()` secara langsung tanpa label `LOG`/`RUN`/`DONE`, dengan penanda dan warna berbeda untuk `info`, `warn`, dan `error`.
 - Command prompt interaktif menerima perintah JavaScript langsung di runtime Preview yang sedang aktif. Tekan `Enter` untuk menjalankan dan `Shift + Enter` untuk membuat baris baru.
 - Riwayat perintah tersedia dengan tombol panah `↑` dan `↓`. Nilai ekspresi, hasil Promise, dan error perintah ditampilkan di Console.
+- Autocomplete Console mengenali global JavaScript, keyword, variabel yang dideklarasikan di editor, serta properti umum seperti `console.`, `Math.`, `document.`, `document.body.`, `window.`, dan `localStorage.`. Gunakan `Tab` untuk menerima saran dan panah untuk memilih saran.
 - Objek dan array pada console dapat dibuka untuk melihat rincian propertinya; status eksekusi dan durasi ditampilkan terpisah pada toolbar console.
 - Console menangkap `log`, `info`, `warn`, `error`, runtime error, dan unhandled promise rejection.
 - **Live Environment** menggunakan dua tab: **Preview** dan **Console**. Masing-masing memakai area tampilan yang sama sehingga Preview dapat dilihat penuh tanpa panel Console, dan sebaliknya.
