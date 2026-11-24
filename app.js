@@ -994,15 +994,15 @@
   }
 
   function selectNextOccurrence(cm) {
-    const selection = cm.listSelections()[0];
-    let selected = cm.getRange(selection.from(), selection.to());
+    let selected = cm.getRange(cm.getCursor('from'), cm.getCursor('to'));
     if (!selected) {
-      const token = cm.getTokenAt(cm.getCursor());
+      const cursor = cm.getCursor();
+      const token = cm.getTokenAt(cursor);
       selected = token.string.trim();
       if (!selected || !/^[A-Za-z_$][\w$]*$/.test(selected)) return;
       cm.setSelection(
-        { line: cm.getCursor().line, ch: token.start },
-        { line: cm.getCursor().line, ch: token.end }
+        { line: cursor.line, ch: token.start },
+        { line: cursor.line, ch: token.end }
       );
     }
     const current = cm.getCursor('head');
@@ -1075,6 +1075,11 @@
         'Ctrl-H': 'replace',
         'Cmd-Alt-F': 'replace',
         'Ctrl-G': 'jumpToLine',
+        'Ctrl-Y': 'redo',
+        'Ctrl-Shift-Z': 'redo',
+        'Cmd-Shift-Z': 'redo',
+        'Ctrl-[': (cm) => cm.execCommand('indentLess'),
+        'Ctrl-]': (cm) => cm.execCommand('indentMore'),
         'Ctrl-L': selectCurrentLine,
         'Ctrl-D': selectNextOccurrence,
         'Ctrl-Shift-K': deleteCurrentLines,
