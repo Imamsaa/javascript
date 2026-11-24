@@ -232,7 +232,6 @@
     const toggle = $('#problemsToggle');
     toggle.classList.toggle('has-errors', errors.length > 0);
     toggle.classList.toggle('has-warnings', errors.length === 0 && warnings.length > 0);
-    $('#problemIcon').textContent = count ? '●' : '●';
 
     const list = $('#problemsList');
     list.replaceChildren();
@@ -292,7 +291,7 @@
 
   function setLintForActiveTab() {
     if (!codeEditor) return;
-    if (activeTab === 'js' && linter && CodeMirror.lint) {
+    if (activeTab === 'js' && linter) {
       codeEditor.setOption('lint', {
         getAnnotations: getLintAnnotations,
         async: false
