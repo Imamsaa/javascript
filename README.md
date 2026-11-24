@@ -24,6 +24,8 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Materi dan Tu
 - Jalankan kode dengan tombol **Jalankan** atau `Ctrl + Enter`.
 - HTML dan CSS membentuk tampilan preview.
 - JavaScript dieksekusi di dalam iframe sandbox terpisah.
+- Console menampilkan nilai `console.log()` secara langsung tanpa label `LOG`/`RUN`/`DONE`, dengan penanda dan warna berbeda untuk `info`, `warn`, dan `error`.
+- Objek dan array pada console dapat dibuka untuk melihat rincian propertinya; status eksekusi dan durasi ditampilkan terpisah pada toolbar console.
 - Console menangkap `log`, `info`, `warn`, `error`, runtime error, dan unhandled promise rejection.
 - **Live Environment** menggunakan dua tab: **Preview** dan **Console**. Masing-masing memakai area tampilan yang sama sehingga Preview dapat dilihat penuh tanpa panel Console, dan sebaliknya.
 - Console tetap merekam output meskipun tab Console tidak sedang aktif; jumlah output ditampilkan pada badge tab.
