@@ -678,7 +678,7 @@
     const input = $('#consoleCommandInput');
     const cursor = input.selectionStart;
     const before = input.value.slice(0, cursor);
-    const memberMatch = before.match(/([A-Za-z_$][\\w$]*(?:\\.[A-Za-z_$][\\w$]*)*)\\.([A-Za-z_$][\\w$]*)?$/);
+    const memberMatch = before.match(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\.([A-Za-z_$][\w$]*)?$/);
 
     if (memberMatch) {
       const objectPath = memberMatch[1];
@@ -693,11 +693,11 @@
       };
     }
 
-    const wordMatch = before.match(/([A-Za-z_$][\\w$]*)$/);
+    const wordMatch = before.match(/([A-Za-z_$][\w$]*)$/);
     if (!wordMatch) return null;
     const query = wordMatch[1];
     const runtimeVariables = [];
-    const declarationPattern = /\\b(?:const|let|var|function|class)\\s+([A-Za-z_$][\\w$]*)/g;
+    const declarationPattern = /\b(?:const|let|var|function|class)\\s+([A-Za-z_$][\w$]*)/g;
     let declaration;
     while ((declaration = declarationPattern.exec(editors.js.value))) runtimeVariables.push(declaration[1]);
 
