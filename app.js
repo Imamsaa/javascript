@@ -563,7 +563,9 @@
 
   async function formatValue(tab, value) {
     if (!value.trim()) return value;
-    if (!window.prettier || !parserPlugins().length) throw new Error('Prettier belum termuat. Periksa koneksi internet.');
+    if (!window.prettier || !parserPlugins().length) {
+      throw new Error(window.PRETTIER_LOAD_ERROR || 'Prettier belum termuat. Periksa koneksi internet atau muat ulang halaman.');
+    }
     return window.prettier.format(value, {
       parser: editors[tab].parser,
       plugins: parserPlugins(),
