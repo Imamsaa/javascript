@@ -4,7 +4,7 @@ Playground JavaScript untuk latihan pemrograman berbasis browser. Proyek menggun
 
 ## Workspace utama
 
-Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Tombol **Jalankan** berada di toolbar editor agar dekat dengan area kerja. Materi dan Tugas tersedia melalui tombol navigasi terpisah di bagian atas. Keduanya sengaja masih kosong sampai kurikulum disiapkan.
+Halaman awal langsung menampilkan **Code Editor** dan **Live Environment**. Tombol **Jalankan** berada di toolbar editor agar dekat dengan area kerja.
 
 ### Editor
 
@@ -59,12 +59,6 @@ Shortcut memakai tombol Ctrl pada Windows/Linux. Pada macOS, beberapa shortcut m
 ### Penyimpanan
 
 Isi ketiga editor dan tab terakhir disimpan otomatis ke `localStorage`. Penyimpanan hanya berlaku pada browser/perangkat yang sama; belum ada login atau sinkronisasi cloud.
-
-## Materi dan Tugas
-
-Modul pertama adalah **JavaScript Syntax**, diringkas dan diadaptasi dari [W3Schools — JavaScript Syntax](https://www.w3schools.com/js/js_syntax.asp). Materi membahas aturan sintaks dan komentar, values, literals, keywords, variables, identifiers, operators, expressions, case sensitivity, serta camel case.
-
-Tersedia lima tugas praktik dari tingkat dasar hingga menengah. Tombol **Buka di editor** memuat kerangka tugas ke tab JavaScript. Jika editor JavaScript sudah berisi kode, aplikasi meminta konfirmasi sebelum menggantinya. Tombol **Periksa Jawaban** menjalankan pemeriksaan terpisah untuk tiap tugas: variabel dan hasil operasi, tipe nilai dan output, identifier valid, hasil ekspresi, serta case sensitivity dan camel case. Kode diperiksa di Web Worker terpisah, akses jaringan dinonaktifkan saat pemeriksaan, dan waktu eksekusi dibatasi 1,5 detik. Status dan rincian kriteria yang terpenuhi disimpan di localStorage browser tersebut; belum ada sinkronisasi ke akun guru atau server.
 
 ## Menjalankan
 
