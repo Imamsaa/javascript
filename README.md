@@ -73,7 +73,7 @@ Tidak perlu menjalankan `npm install`, build command, atau backend.
 Library dimuat dari CDN dan versinya dipatok di `index.html`:
 
 - CodeMirror 5.65.21 — editor, mode bahasa, autocomplete, dan lint gutter.
-- Prettier 3.10.1 — formatting HTML/CSS/JavaScript melalui standalone browser build.
+- Prettier 3.10.1 — standalone ES modules dengan plugin Babel, Estree, HTML, dan PostCSS; parser diuji sebelum editor dimuat.
 - eslint-linter-browserify 10.14.0 — ESLint `Linter` bundle untuk browser.
 
 Koneksi internet diperlukan agar library CDN dapat dimuat. Jika CDN gagal dimuat, editor canggih, formatter, autocomplete, atau linting bisa tidak tersedia.
