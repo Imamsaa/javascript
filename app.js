@@ -58,6 +58,7 @@
   let runStartedAt = 0;
   let runHadError = false;
   let problemsOpen = false;
+  let consoleEntryCount = 0;
   let lintCacheText = null;
   let lintCacheMessages = [];
   let linter = null;
@@ -386,6 +387,8 @@
   }
 
   function clearConsole() {
+    consoleEntryCount = 0;
+    $('#consoleBadge').textContent = '0';
     consoleOutput.replaceChildren();
     const placeholder = document.createElement('div');
     placeholder.className = 'console-placeholder';
@@ -427,6 +430,8 @@
     content.textContent = (values || []).map(formatConsoleValue).join(' ');
     row.append(label, content);
     consoleOutput.append(row);
+    consoleEntryCount += 1;
+    $('#consoleBadge').textContent = String(consoleEntryCount);
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
   }
 
@@ -449,6 +454,8 @@
     }
     if (data.type === 'clear') {
       consoleOutput.replaceChildren();
+      consoleEntryCount = 0;
+      $('#consoleBadge').textContent = '0';
       return;
     }
     if (data.type === 'finished') {
@@ -540,7 +547,7 @@
       $('#previewState').textContent = 'Memuat preview…';
       previewFrame.srcdoc = buildPreviewDocument(runToken, editors.html.value, editors.css.value, editors.js.value);
       appendConsole('info', ['Menjalankan JavaScript…'], 'RUN');
-      if ($('#consolePanel').classList.contains('collapsed')) toggleConsole(true);
+
     } catch (error) {
       showToast('Format atau eksekusi gagal: ' + (error.message || error));
     } finally {
@@ -549,12 +556,15 @@
     }
   }
 
-  function toggleConsole(forceOpen) {
-    const panel = $('#consolePanel');
-    const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : panel.classList.contains('collapsed');
-    panel.classList.toggle('collapsed', !shouldOpen);
-    $('#consoleHeading').setAttribute('aria-expanded', String(shouldOpen));
-    $('#toggleConsoleBtn').setAttribute('aria-expanded', String(shouldOpen));
+  function setEnvironmentTab(tab) {
+    const showConsole = tab === 'console';
+    $('#previewPane').hidden = showConsole;
+    $('#consolePane').hidden = !showConsole;
+    $('#previewTab').classList.toggle('active', !showConsole);
+    $('#consoleTab').classList.toggle('active', showConsole);
+    $('#previewTab').setAttribute('aria-selected', String(!showConsole));
+    $('#consoleTab').setAttribute('aria-selected', String(showConsole));
+    $('#environmentTitle').textContent = showConsole ? 'Console' : 'Preview';
   }
 
   function toggleProblems(forceOpen) {
@@ -657,8 +667,8 @@
   $('#runBtn').addEventListener('click', runCode);
   $('#formatBtn').addEventListener('click', formatActiveEditor);
   $('#resetBtn').addEventListener('click', resetWorkspace);
-  $('#toggleConsoleBtn').addEventListener('click', () => toggleConsole());
-  $('#consoleHeading').addEventListener('click', () => toggleConsole());
+  $('#previewTab').addEventListener('click', () => setEnvironmentTab('preview'));
+  $('#consoleTab').addEventListener('click', () => setEnvironmentTab('console'));
   $('#clearConsoleBtn').addEventListener('click', clearConsole);
   $('#problemsToggle').addEventListener('click', () => toggleProblems());
   $('#closeProblemsBtn').addEventListener('click', () => toggleProblems(false));
@@ -677,6 +687,7 @@
   initializeCodeMirror();
   updateEditorStats();
   renderProblems([]);
+  setEnvironmentTab('preview');
   $('#materialsBtn .nav-count').textContent = '0';
   $('#tasksBtn .nav-count').textContent = String(TASKS.length);
   if (!linter) {
