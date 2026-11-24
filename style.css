@@ -443,3 +443,71 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   .console-pane .console-output { font-size: 11px; }
   .console-pane .console-entry { font-size: 11px; }
 }
+
+/* Interactive DevTools-style command line at the bottom of Console. */
+.console-command-form {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 13px;
+  border-top: 1px solid var(--line);
+  background: #0d1929;
+}
+.console-prompt {
+  flex: 0 0 17px;
+  padding-top: 2px;
+  color: #75d7a8;
+  font: 15px/1.5 var(--mono);
+  user-select: none;
+}
+.console-command-form textarea {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 24px;
+  max-height: 120px;
+  padding: 2px 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  color: #e6edf7;
+  caret-color: var(--accent);
+  background: transparent;
+  font: 11px/1.6 var(--mono);
+}
+.console-command-form textarea::placeholder { color: #72849d; opacity: 1; }
+.console-submit {
+  display: grid;
+  flex: 0 0 25px;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  margin-top: 0;
+  border: 1px solid rgba(85,214,164,.23);
+  border-radius: 6px;
+  color: var(--green);
+  background: rgba(85,214,164,.08);
+  cursor: pointer;
+  font: 13px var(--mono);
+}
+.console-submit:hover { color: #10251f; background: var(--green); }
+.console-pane .console-entry.command {
+  color: #aebfd4;
+  background: rgba(125,181,255,.045);
+}
+.console-pane .console-entry.command .console-marker { color: var(--green); font-weight: 700; }
+.console-pane .console-entry.command .console-value { color: #cbd8e9; }
+.console-pane .console-entry.result {
+  border-bottom-color: rgba(85,214,164,.12);
+  background: rgba(85,214,164,.035);
+}
+.console-pane .console-entry.result .console-marker { color: var(--green); }
+.console-pane .console-entry.error-stack { background: rgba(255,90,100,.045); }
+.console-pane .console-entry.error-stack .console-content { color: #d58a91; font-size: 10px; }
+@media (max-width: 700px) {
+  .console-command-form { min-height: 45px; padding: 9px 10px; gap: 7px; }
+  .console-command-form textarea { font-size: 10px; }
+  .console-submit { width: 23px; height: 23px; flex-basis: 23px; }
+}
