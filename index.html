@@ -100,8 +100,13 @@
             <div class="console-toolbar-title"><span class="terminal-icon" aria-hidden="true">&gt;_</span><strong>Console</strong><span class="console-state" id="consoleState">Menunggu eksekusi</span></div>
             <button class="clear-console-button" id="clearConsoleBtn" type="button">Bersihkan</button>
           </div>
-          <div class="console-output" id="consoleOutput" role="log" aria-live="polite"><div class="console-placeholder">Output console akan muncul di sini setelah kode dijalankan.</div></div>
-          <div class="console-footer"><span>JavaScript Console</span><span>Output dari script.js</span></div>
+          <div class="console-output" id="consoleOutput" role="log" aria-live="polite"><div class="console-placeholder">Jalankan kode di Preview, lalu ketik perintah JavaScript di bawah.</div></div>
+          <form class="console-command-form" id="consoleCommandForm" autocomplete="off">
+            <label class="console-prompt" for="consoleCommandInput">&gt;</label>
+            <textarea id="consoleCommandInput" rows="1" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Ketik perintah JavaScript…  (Enter untuk menjalankan, Shift + Enter untuk baris baru)" aria-label="Perintah JavaScript Console"></textarea>
+            <button class="console-submit" type="submit" title="Jalankan perintah">↵</button>
+          </form>
+          <div class="console-footer"><span>JavaScript Console</span><span>↑ ↓ riwayat perintah</span></div>
         </section>
       </section>
     </main>
