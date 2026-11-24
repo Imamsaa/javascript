@@ -727,38 +727,6 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   .console-pane .console-output { padding: 11px 10px; }
 }
 
-/* Additional editor keybinding and search dialog polish. */
-.CodeMirror-dialog {
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(148,163,184,.17);
-  color: #dce7f5;
-  background: #15263d;
-  font: 11px var(--sans);
-}
-.CodeMirror-dialog input {
-  margin: 0 5px;
-  padding: 4px 7px;
-  border: 1px solid rgba(148,163,184,.25);
-  border-radius: 5px;
-  outline: none;
-  color: #edf4ff;
-  background: #0b1423;
-  font: 11px var(--mono);
-}
-.CodeMirror-dialog input:focus { border-color: rgba(125,181,255,.7); }
-.CodeMirror-dialog button {
-  margin-left: 4px;
-  padding: 4px 7px;
-  border: 1px solid rgba(148,163,184,.2);
-  border-radius: 5px;
-  color: #c8d5e6;
-  background: rgba(255,255,255,.04);
-  cursor: pointer;
-  font-size: 10px;
-}
-.CodeMirror-dialog button:hover { background: rgba(255,255,255,.1); }
-
-
 /* Final bounded layout: the log itself owns vertical scrolling. */
 .output-column { display: block; min-width: 0; }
 .environment-panel {
