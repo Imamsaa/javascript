@@ -38,6 +38,8 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Tombol **Jala
 | `Tab / Shift + Tab` | Indentasi / outdent |
 | `Shift + Alt + F` | Format kode |
 | `Ctrl + S` | Simpan workspace lokal |
+| `Ctrl + Y` / `Ctrl + Shift + Z` | Redo |
+| `Ctrl + [` / `Ctrl + ]` | Outdent / indent |
 
 Shortcut memakai tombol Ctrl pada Windows/Linux. Pada macOS, beberapa shortcut memakai Cmd yang juga didukung oleh editor.
 
