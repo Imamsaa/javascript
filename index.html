@@ -22,7 +22,6 @@
         <button class="nav-button" id="materialsBtn" type="button">Materi <span class="nav-count">0</span></button>
         <button class="nav-button" id="tasksBtn" type="button">Tugas <span class="nav-count">0</span></button>
         <span class="topbar-divider"></span>
-        <button class="button button-ghost" id="toggleConsoleBtn" type="button" aria-expanded="false">Console</button>
         <button class="button button-primary" id="runBtn" type="button"><span aria-hidden="true">▶</span> Jalankan <kbd>Ctrl ↵</kbd></button>
       </nav>
     </header>
@@ -75,12 +74,18 @@
         </section>
       </section>
 
-      <section class="output-column" aria-label="Hasil kode">
-        <section class="preview-panel panel">
-          <div class="output-heading">
-            <div><span class="section-kicker">LIVE ENVIRONMENT</span><h2>Preview</h2></div>
-            <div class="preview-actions"><span class="preview-state" id="previewState">Belum dijalankan</span><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span></div>
-          </div>
+      <section class="environment-panel panel" aria-label="Live Environment">
+        <div class="environment-header">
+          <div><span class="section-kicker">LIVE ENVIRONMENT</span><h2 id="environmentTitle">Preview</h2></div>
+          <div class="preview-actions"><span class="preview-state" id="previewState">Belum dijalankan</span><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        </div>
+
+        <div class="environment-tabs" role="tablist" aria-label="Pilih tampilan Live Environment">
+          <button class="environment-tab active" id="previewTab" type="button" role="tab" aria-selected="true" aria-controls="previewPane"> <span class="tab-symbol preview-symbol">▣</span> Preview</button>
+          <button class="environment-tab" id="consoleTab" type="button" role="tab" aria-selected="false" aria-controls="consolePane"><span class="tab-symbol console-symbol">&gt;_</span> Console <span class="tab-badge" id="consoleBadge">0</span></button>
+        </div>
+
+        <section class="environment-pane preview-pane" id="previewPane" role="tabpanel" aria-labelledby="previewTab">
           <div class="preview-frame-wrap" id="previewWrap">
             <div class="preview-empty" id="previewEmpty">
               <div class="preview-empty-icon">◫</div><strong>Preview masih kosong</strong>
@@ -90,13 +95,13 @@
           </div>
         </section>
 
-        <section class="console-panel panel collapsed" id="consolePanel">
-          <button class="console-heading" id="consoleHeading" type="button" aria-expanded="false">
-            <span class="console-title"><span class="terminal-icon" aria-hidden="true">&gt;_</span><span><span class="section-kicker">OUTPUT</span><strong>Console</strong></span></span>
-            <span class="console-heading-right"><span class="console-state" id="consoleState">Menunggu eksekusi</span><span class="chevron">⌄</span></span>
-          </button>
+        <section class="environment-pane console-pane" id="consolePane" role="tabpanel" aria-labelledby="consoleTab" hidden>
+          <div class="console-toolbar">
+            <div class="console-toolbar-title"><span class="terminal-icon" aria-hidden="true">&gt;_</span><strong>Console Output</strong><span class="console-state" id="consoleState">Menunggu eksekusi</span></div>
+            <button class="clear-console-button" id="clearConsoleBtn" type="button">Bersihkan</button>
+          </div>
           <div class="console-output" id="consoleOutput" role="log" aria-live="polite"><div class="console-placeholder">Output console akan muncul di sini setelah kode dijalankan.</div></div>
-          <div class="console-footer"><span>Console JavaScript</span><button id="clearConsoleBtn" type="button">Bersihkan</button></div>
+          <div class="console-footer"><span>JavaScript Console</span><span>Output dari script.js</span></div>
         </section>
       </section>
     </main>
