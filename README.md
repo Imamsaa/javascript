@@ -56,6 +56,7 @@ Shortcut memakai tombol Ctrl pada Windows/Linux. Pada macOS, beberapa shortcut m
 - Console menangkap `log`, `info`, `warn`, `error`, runtime error, dan unhandled promise rejection.
 - **Live Environment** menggunakan dua tab: **Preview** dan **Console**. Masing-masing memakai area tampilan yang sama sehingga Preview dapat dilihat penuh tanpa panel Console, dan sebaliknya.
 - Console tetap merekam output meskipun tab Console tidak sedang aktif; jumlah output ditampilkan pada badge tab.
+- Area log Console memiliki scroll vertikal sendiri; command input dan toolbar tetap terlihat saat output bertambah.
 
 ### Penyimpanan
 
