@@ -601,3 +601,55 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   #consolePane #consoleCommandForm { min-height: 49px; padding: 9px 10px; gap: 8px; }
   #consolePane #consoleCommandInput { font-size: 11px; }
 }
+
+/* Console autocomplete dropdown. */
+#consolePane #consoleCommandForm { position: relative; }
+#consolePane .console-suggestions {
+  position: absolute;
+  z-index: 100;
+  left: 39px;
+  bottom: calc(100% + 5px);
+  width: min(390px, calc(100% - 82px));
+  max-height: 260px;
+  padding: 5px;
+  overflow: auto;
+  border: 1px solid rgba(148,163,184,.23);
+  border-radius: 9px;
+  background: #142238;
+  box-shadow: 0 16px 38px rgba(0,0,0,.42);
+}
+#consolePane .console-suggestion {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 5px;
+  color: #dce7f5;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: 11px/1.4 var(--mono);
+}
+#consolePane .console-suggestion:hover,
+#consolePane .console-suggestion.active {
+  color: #f8fbff;
+  background: rgba(125,181,255,.15);
+}
+#consolePane .suggestion-name { overflow-wrap: anywhere; }
+#consolePane .suggestion-kind {
+  flex: 0 0 auto;
+  color: #8196b1;
+  font: 9px var(--sans);
+}
+#consolePane .console-suggestion.active .suggestion-kind { color: #a9cfff; }
+@media (max-width: 700px) {
+  #consolePane .console-suggestions {
+    left: 31px;
+    width: calc(100% - 66px);
+    max-height: 210px;
+  }
+  #consolePane .console-suggestion { padding: 8px; font-size: 10px; }
+}
