@@ -2,6 +2,7 @@
 
 (() => {
   const STORAGE_KEY = 'ict-javascript-playground-workspace-v2';
+  const CHANNEL = 'javascript-playground';
   const $ = (selector) => document.querySelector(selector);
   const textarea = $('#codeEditor');
   const previewFrame = $('#previewFrame');
