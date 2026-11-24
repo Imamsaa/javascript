@@ -130,11 +130,75 @@
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/hint/css-hint.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/lint/lint.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/eslint-linter-browserify@10.14.0/linter.min.js"></script>
-  <script src="https://unpkg.com/prettier@3.10.1/standalone.js"></script>
-  <script src="https://unpkg.com/prettier@3.10.1/plugins/babel.js"></script>
-  <script src="https://unpkg.com/prettier@3.10.1/plugins/estree.js"></script>
-  <script src="https://unpkg.com/prettier@3.10.1/plugins/html.js"></script>
-  <script src="https://unpkg.com/prettier@3.10.1/plugins/postcss.js"></script>
-  <script src="app-editor-v14.js?v=20261124-channel-fix-v14"></script>
+  <script>
+    (async function loadPrettier() {
+      const cdnBases = [
+        'https://cdn.jsdelivr.net/npm/prettier@3.10.1',
+        'https://unpkg.com/prettier@3.10.1'
+      ];
+      const files = [
+        '/standalone.js',
+        '/plugins/babel.js',
+        '/plugins/estree.js',
+        '/plugins/html.js',
+        '/plugins/postcss.js'
+      ];
+
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          const timeout = window.setTimeout(() => {
+            script.remove();
+            reject(new Error('Timeout saat memuat ' + url));
+          }, 8000);
+          script.src = url;
+          script.onload = () => {
+            window.clearTimeout(timeout);
+            resolve();
+          };
+          script.onerror = () => {
+            window.clearTimeout(timeout);
+            script.remove();
+            reject(new Error('Gagal memuat ' + url));
+          };
+          document.head.appendChild(script);
+        });
+      }
+
+      let loaded = false;
+      const failures = [];
+      for (const base of cdnBases) {
+        try {
+          try { delete window.prettier; } catch (_error) { window.prettier = undefined; }
+          window.prettierPlugins = [];
+
+          await loadScript(base + files[0]);
+          const pluginResults = await Promise.allSettled(
+            files.slice(1).map(file => loadScript(base + file))
+          );
+          const failedPlugin = pluginResults.find(result => result.status === 'rejected');
+          if (failedPlugin) throw failedPlugin.reason;
+          if (!window.prettier || !Array.isArray(window.prettierPlugins) || window.prettierPlugins.length < 4) {
+            throw new Error('Prettier atau plugin parser tidak lengkap dari ' + base);
+          }
+          loaded = true;
+          console.info('Prettier 3.10.1 berhasil dimuat dari ' + base);
+          break;
+        } catch (error) {
+          failures.push(error && error.message ? error.message : String(error));
+        }
+      }
+
+      if (!loaded) {
+        window.PRETTIER_LOAD_ERROR = 'Prettier gagal dimuat dari jsDelivr dan unpkg. Periksa koneksi internet atau pemblokir CDN. Detail: ' + failures.join(' | ');
+        console.error(window.PRETTIER_LOAD_ERROR);
+      }
+
+      const appScript = document.createElement('script');
+      appScript.src = 'app-editor-v15.js?v=20261124-prettier-fallback-v15';
+      appScript.onerror = () => console.error('JavaScript Playground gagal memuat app-editor-v15.js.');
+      document.body.appendChild(appScript);
+    })();
+  </script>
 </body>
 </html>
