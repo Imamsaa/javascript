@@ -59,6 +59,10 @@
   let runHadError = false;
   let problemsOpen = false;
   let consoleEntryCount = 0;
+  let commandCounter = 0;
+  let commandHistory = [];
+  let commandHistoryIndex = 0;
+  const pendingCommands = new Set();
   let lintCacheText = null;
   let lintCacheMessages = [];
   let linter = null;
@@ -361,6 +365,18 @@
       '  console.table = (data) => send("console", { level: "log", values: [serialize(data)] });',
       '  window.addEventListener("error", (event) => { send("console", { level: "error", values: [event.message + (event.lineno ? " (baris " + event.lineno + ")" : "")] }); });',
       '  window.addEventListener("unhandledrejection", (event) => { send("console", { level: "error", values: ["Unhandled promise rejection:", serialize(event.reason)] }); });',
+      '  window.addEventListener("message", (event) => {',
+      '    if (event.source !== parent || !event.data || event.data.channel !== ' + JSON.stringify(CHANNEL) + ' || event.data.token !== token || event.data.type !== "command") return;',
+      '    const requestId = event.data.requestId;',
+      '    try {',
+      '      const result = window.eval(String(event.data.command || ""));',
+      '      const reportValue = (value) => send("command-result", { requestId: requestId, hasValue: typeof value !== "undefined", value: serialize(value) });',
+      '      if (result && typeof result.then === "function") Promise.resolve(result).then(reportValue, (error) => send("command-error", { requestId: requestId, message: error && error.message ? error.message : String(error), stack: error && error.stack ? error.stack : "" }));',
+      '      else reportValue(result);',
+      '    } catch (error) {',
+      '      send("command-error", { requestId: requestId, message: error && error.message ? error.message : String(error), stack: error && error.stack ? error.stack : "" });',
+      '    }',
+      '  });',
       '  const cssBinary = atob(' + JSON.stringify(encodeBase64Utf8(css)) + ');',
       '  const cssBytes = Uint8Array.from(cssBinary, (char) => char.charCodeAt(0));',
       '  const style = document.createElement("style");',
@@ -377,7 +393,7 @@
     ].join('\n');
 
     return '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-      '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data: blob:; font-src data:; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'">' +
+      '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\' \'unsafe-eval\' style-src \'unsafe-inline\'; img-src data: blob:; font-src data:; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'">' +
       '</head><body>' + html + '<script>' + script + '<' + '/script></body></html>';
   }
 
@@ -427,7 +443,7 @@
     const marker = document.createElement('span');
     marker.className = 'console-marker';
     marker.setAttribute('aria-hidden', 'true');
-    marker.textContent = type === 'error' ? '×' : type === 'warn' ? '⚠' : type === 'info' ? 'ℹ' : '›';
+    marker.textContent = type === 'error' ? '×' : type === 'warn' ? '⚠' : type === 'info' ? 'ℹ' : type === 'command' ? '>' : '›';
     marker.title = type === 'error' ? 'Error' : type === 'warn' ? 'Warning' : type === 'info' ? 'Info' : 'Log';
 
     const content = document.createElement('div');
@@ -475,6 +491,21 @@
         runHadError = true;
         consoleState.textContent = 'Selesai dengan error';
       }
+      return;
+    }
+    if (data.type === 'command-result') {
+      const requestId = String(data.requestId || '');
+      if (!pendingCommands.has(requestId)) return;
+      pendingCommands.delete(requestId);
+      if (data.hasValue) appendConsole('result', [data.value]);
+      return;
+    }
+    if (data.type === 'command-error') {
+      const requestId = String(data.requestId || '');
+      if (!pendingCommands.has(requestId)) return;
+      pendingCommands.delete(requestId);
+      appendConsole('error', [data.message || 'Command error']);
+      if (data.stack) appendConsole('error-stack', [data.stack]);
       return;
     }
     if (data.type === 'clear') {
@@ -576,6 +607,59 @@
     } finally {
       runButton.disabled = false;
       runButton.innerHTML = originalLabel;
+    }
+  }
+
+  function runConsoleCommand(rawCommand) {
+    const command = String(rawCommand || '').trim();
+    if (!command) return;
+    if (!runToken || !previewFrame.contentWindow || !previewWrap.classList.contains('has-content')) {
+      appendConsole('warn', ['Jalankan kode di tab Preview terlebih dahulu sebelum menggunakan Console interaktif.']);
+      return;
+    }
+    if (commandHistory[commandHistory.length - 1] !== command) {
+      commandHistory.push(command);
+      if (commandHistory.length > 100) commandHistory.shift();
+    }
+    commandHistoryIndex = commandHistory.length;
+    appendConsole('command', [command]);
+    const requestId = String(++commandCounter);
+    pendingCommands.add(requestId);
+    previewFrame.contentWindow.postMessage({
+      channel: CHANNEL, token: runToken, type: 'command',
+      requestId: requestId, command: command
+    }, '*');
+    consoleState.textContent = 'Perintah dijalankan';
+  }
+
+  function handleConsoleCommandKeydown(event) {
+    const input = $('#consoleCommandInput');
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      const command = input.value;
+      input.value = '';
+      input.style.height = 'auto';
+      runConsoleCommand(command);
+      return;
+    }
+    if (event.key === 'ArrowUp' && commandHistory.length) {
+      const atStart = input.selectionStart === 0 && input.selectionEnd === 0;
+      if (atStart || !input.value) {
+        event.preventDefault();
+        commandHistoryIndex = Math.max(0, commandHistoryIndex - 1);
+        input.value = commandHistory[commandHistoryIndex] || '';
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+      return;
+    }
+    if (event.key === 'ArrowDown' && commandHistory.length) {
+      const atEnd = input.selectionStart === input.value.length && input.selectionEnd === input.value.length;
+      if (atEnd || !input.value) {
+        event.preventDefault();
+        commandHistoryIndex = Math.min(commandHistory.length, commandHistoryIndex + 1);
+        input.value = commandHistoryIndex === commandHistory.length ? '' : commandHistory[commandHistoryIndex];
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
     }
   }
 
@@ -693,6 +777,19 @@
   $('#previewTab').addEventListener('click', () => setEnvironmentTab('preview'));
   $('#consoleTab').addEventListener('click', () => setEnvironmentTab('console'));
   $('#clearConsoleBtn').addEventListener('click', clearConsole);
+  $('#consoleCommandForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const input = $('#consoleCommandInput');
+    const command = input.value;
+    input.value = '';
+    input.style.height = 'auto';
+    runConsoleCommand(command);
+  });
+  $('#consoleCommandInput').addEventListener('keydown', handleConsoleCommandKeydown);
+  $('#consoleCommandInput').addEventListener('input', (event) => {
+    event.currentTarget.style.height = 'auto';
+    event.currentTarget.style.height = Math.min(event.currentTarget.scrollHeight, 120) + 'px';
+  });
   $('#problemsToggle').addEventListener('click', () => toggleProblems());
   $('#closeProblemsBtn').addEventListener('click', () => toggleProblems(false));
   $('#materialsBtn').addEventListener('click', () => openContentDialog('materials'));
