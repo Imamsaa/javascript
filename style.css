@@ -376,3 +376,70 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   .console-toolbar-title .console-state { display: none; }
   .console-pane .console-output { padding: 11px 10px; }
 }
+
+/* Console output styled like a developer-tools console rather than an activity table. */
+.console-toolbar-title strong { font-family: var(--sans); letter-spacing: -.1px; }
+.console-pane .console-output {
+  background: #0a1422;
+  color: #dce6f3;
+  font: 12px/1.65 var(--mono);
+}
+.console-pane .console-entry {
+  display: grid;
+  grid-template-columns: 19px minmax(0,1fr);
+  align-items: start;
+  gap: 8px;
+  min-height: 29px;
+  padding: 5px 9px;
+  border: 0;
+  border-bottom: 1px solid rgba(148,163,184,.07);
+  color: #dce6f3;
+  background: transparent;
+  font: 12px/1.6 var(--mono);
+  white-space: normal;
+}
+.console-pane .console-entry.log { background: transparent; }
+.console-pane .console-entry.info { color: #a9cfff; background: rgba(80,145,220,.055); }
+.console-pane .console-entry.warn { color: #f2d18b; background: rgba(233,189,88,.075); }
+.console-pane .console-entry.error { color: #ffaaaa; background: rgba(255,90,100,.09); }
+.console-marker {
+  display: inline-grid;
+  width: 17px;
+  min-height: 19px;
+  place-items: center;
+  color: #8498b1;
+  font: 14px/1 var(--mono);
+  user-select: none;
+}
+.console-entry.info .console-marker { color: #7db5ff; }
+.console-entry.warn .console-marker { color: #e9bd58; font-size: 11px; }
+.console-entry.error .console-marker { color: #ff7d83; font-size: 18px; font-weight: 700; }
+.console-content { min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.console-value { color: #dce6f3; }
+.console-value.string-value { color: #c3e88d; }
+.console-value.number, .console-value.bigint { color: #f78c6c; }
+.console-value.boolean, .console-value.undefined { color: #c792ea; }
+.console-object { display: inline; color: #9db8d6; }
+.console-object summary { display: inline; color: #9fc6f5; cursor: pointer; user-select: none; }
+.console-object summary:hover { text-decoration: underline; }
+.console-object pre {
+  max-width: 100%;
+  margin: 5px 0 4px;
+  padding: 8px 10px;
+  overflow: auto;
+  border-left: 2px solid rgba(125,181,255,.35);
+  color: #cbd9e9;
+  background: rgba(255,255,255,.035);
+  font: 11px/1.55 var(--mono);
+  white-space: pre;
+}
+.console-pane .console-placeholder {
+  padding: 7px 9px;
+  color: #718199;
+  font: 11px/1.6 var(--mono);
+}
+.console-toolbar .console-state { font: 10px var(--mono); }
+@media (max-width: 700px) {
+  .console-pane .console-output { font-size: 11px; }
+  .console-pane .console-entry { font-size: 11px; }
+}
