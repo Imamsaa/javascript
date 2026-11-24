@@ -62,6 +62,9 @@
   let commandCounter = 0;
   let commandHistory = [];
   let commandHistoryIndex = 0;
+  let consoleSuggestions = [];
+  let activeConsoleSuggestion = 0;
+  let consoleSuggestionRange = null;
   let previewRuntimeReady = false;
   const pendingCommands = new Set();
   const queuedConsoleCommands = [];
