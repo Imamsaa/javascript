@@ -697,7 +697,7 @@
     if (!wordMatch) return null;
     const query = wordMatch[1];
     const runtimeVariables = [];
-    const declarationPattern = /\b(?:const|let|var|function|class)\\s+([A-Za-z_$][\w$]*)/g;
+    const declarationPattern = /\b(?:const|let|var|function|class)\s+([A-Za-z_$][\w$]*)/g;
     let declaration;
     while ((declaration = declarationPattern.exec(editors.js.value))) runtimeVariables.push(declaration[1]);
 
