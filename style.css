@@ -926,3 +926,49 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   .task-card-top { gap: 8px; }
   .task-title-wrap h3 { font-size: 12px; }
 }
+
+
+/* Automated task validation feedback */
+.task-actions { flex-wrap: wrap; gap: 8px; }
+.task-check { padding: 8px 12px; font-size: 10px; }
+.task-start { padding: 8px 12px; font-size: 10px; }
+.task-check:disabled { opacity: .65; cursor: wait; }
+.task-validation-result {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(5,12,23,.3);
+}
+.task-validation-result.is-correct {
+  border-color: rgba(85,214,164,.3);
+  background: rgba(85,214,164,.055);
+}
+.task-validation-result.needs-revision {
+  border-color: rgba(233,189,88,.25);
+  background: rgba(233,189,88,.045);
+}
+.validation-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.validation-heading strong { color: #dce7f5; font-size: 11px; }
+.validation-status-icon {
+  display: inline-grid; width: 21px; height: 21px; place-items: center;
+  border-radius: 50%; color: #172033; background: #e9bd58; font: 700 12px var(--sans);
+}
+.is-correct .validation-status-icon { color: #08241a; background: #55d6a4; }
+.validation-score { margin-left: auto; color: #93a7bf; font: 9px var(--mono); }
+.validation-message { margin: 7px 0 0; color: #adbed2; font-size: 10px; line-height: 1.6; }
+.validation-checks { display: grid; gap: 5px; margin: 10px 0 0; padding: 0; list-style: none; }
+.validation-check { display: flex; align-items: flex-start; gap: 7px; color: #aebfd2; font-size: 10px; line-height: 1.5; }
+.validation-check-icon {
+  display: inline-grid; flex: 0 0 15px; width: 15px; height: 15px; place-items: center;
+  border-radius: 50%; color: #13241c; background: #e9bd58; font: 700 9px var(--sans);
+}
+.validation-check.passed .validation-check-icon { color: #08241a; background: #55d6a4; }
+.validation-check.failed .validation-check-icon { color: #2a1717; background: #ff9a9f; }
+.validation-time { margin: 9px 0 0; color: #71859e; font: 9px var(--mono); }
+@media (max-width: 700px) {
+  .task-actions { align-items: stretch; }
+  .task-actions button { flex: 1 1 100%; }
+  .validation-heading { align-items: flex-start; }
+  .validation-score { margin-left: 29px; }
+}
