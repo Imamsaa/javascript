@@ -13,8 +13,8 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Materi dan Tu
 - Autocomplete/suggestion melalui `Ctrl + Space`, serta suggestion otomatis saat mengetik.
 - Auto-close brackets, matching brackets, line numbers, active-line highlight, dan indentasi dua spasi.
 - Prettier 3 standalone untuk format HTML, CSS, dan JavaScript.
-- Tombol **Format** memformat file aktif.
-- Opsi **Format saat Run** (aktif secara default) memformat seluruh file sebelum preview dijalankan.
+- Tombol **Format** memformat file aktif tanpa harus menjalankan ulang preview.
+- Opsi **Format saat Run** (nonaktif secara default) memformat hanya file yang sedang dibuka sebelum preview dijalankan. Dengan demikian, eksekusi kode tidak harus menunggu Prettier memproses semua file.
 - Shortcut format: `Shift + Alt + F`.
 - ESLint di browser dengan pemeriksaan `no-undef`, `no-unused-vars`, `no-var`, `prefer-const`, `eqeqeq`, dan sejumlah aturan dasar lain.
 - Panel **Problems** menampilkan error/warning dan dapat menavigasikan cursor ke baris terkait.
