@@ -93,6 +93,32 @@
     }
   };
 
+
+  const CONSOLE_MEMBER_HINTS = {
+    console: ['assert','clear','count','debug','dir','dirxml','error','group','groupCollapsed','groupEnd','info','log','table','time','timeEnd','timeLog','trace','warn'],
+    Math: ['abs','acos','asin','atan','atan2','ceil','cos','floor','max','min','PI','pow','random','round','sign','sin','sqrt','tan','trunc'],
+    JSON: ['parse','stringify'],
+    Object: ['assign','create','defineProperty','entries','freeze','fromEntries','hasOwn','keys','values'],
+    Array: ['from','isArray','of'],
+    Promise: ['all','allSettled','any','race','reject','resolve'],
+    Date: ['now','parse','UTC'],
+    String: ['fromCharCode','fromCodePoint','raw'],
+    Number: ['isFinite','isInteger','isNaN','parseFloat','parseInt'],
+    document: ['activeElement','body','characterSet','cookie','createElement','createTextNode','documentElement','getElementById','getElementsByClassName','getElementsByTagName','head','querySelector','querySelectorAll','title','URL'],
+    'document.body': ['append','appendChild','children','classList','clientHeight','clientWidth','firstElementChild','innerHTML','innerText','lastElementChild','remove','removeChild','replaceChildren','style','textContent'],
+    'document.documentElement': ['clientHeight','clientWidth','innerHTML','lang','scrollHeight','scrollWidth','style'],
+    'document.head': ['append','appendChild','children','querySelector','querySelectorAll'],
+    window: ['addEventListener','alert','clearInterval','clearTimeout','confirm','document','fetch','history','innerHeight','innerWidth','localStorage','location','matchMedia','navigator','open','prompt','removeEventListener','requestAnimationFrame','scrollTo','sessionStorage','setInterval','setTimeout'],
+    'window.location': ['assign','hash','host','hostname','href','origin','pathname','port','protocol','reload','replace','search'],
+    navigator: ['clipboard','language','languages','onLine','platform','userAgent'],
+    location: ['assign','hash','host','hostname','href','origin','pathname','port','protocol','reload','replace','search'],
+    history: ['back','forward','go','length','pushState','replaceState'],
+    localStorage: ['clear','getItem','key','length','removeItem','setItem'],
+    sessionStorage: ['clear','getItem','key','length','removeItem','setItem'],
+    performance: ['now','timeOrigin','toJSON'],
+    PromisePrototype: ['catch','finally','then']
+  };
+
   const customWords = Array.from(new Set(GLOBALS.concat(JS_KEYWORDS, [
     'length','push','pop','shift','unshift','map','filter','reduce','forEach','find','findIndex','includes',
     'slice','splice','join','split','replace','toUpperCase','toLowerCase','trim','startsWith','endsWith',
@@ -648,10 +674,160 @@
     consoleState.textContent = 'Perintah dijalankan';
   }
 
+  function getConsoleCompletionContext() {
+    const input = $('#consoleCommandInput');
+    const cursor = input.selectionStart;
+    const before = input.value.slice(0, cursor);
+    const memberMatch = before.match(/([A-Za-z_$][\\w$]*(?:\\.[A-Za-z_$][\\w$]*)*)\\.([A-Za-z_$][\\w$]*)?$/);
+
+    if (memberMatch) {
+      const objectPath = memberMatch[1];
+      const query = memberMatch[2] || '';
+      const options = CONSOLE_MEMBER_HINTS[objectPath] || [];
+      if (!options.length) return null;
+      return {
+        query,
+        from: cursor - query.length,
+        to: cursor,
+        candidates: options.map((label) => ({ label, kind: 'property' }))
+      };
+    }
+
+    const wordMatch = before.match(/([A-Za-z_$][\\w$]*)$/);
+    if (!wordMatch) return null;
+    const query = wordMatch[1];
+    const runtimeVariables = [];
+    const declarationPattern = /\\b(?:const|let|var|function|class)\\s+([A-Za-z_$][\\w$]*)/g;
+    let declaration;
+    while ((declaration = declarationPattern.exec(editors.js.value))) runtimeVariables.push(declaration[1]);
+
+    const candidates = Array.from(new Set(GLOBALS.concat(JS_KEYWORDS, customWords, runtimeVariables)))
+      .map((label) => ({ label, kind: JS_KEYWORDS.includes(label) ? 'keyword' : GLOBALS.includes(label) ? 'global' : 'identifier' }));
+    return {
+      query,
+      from: cursor - query.length,
+      to: cursor,
+      candidates
+    };
+  }
+
+  function hideConsoleSuggestions() {
+    const menu = $('#consoleSuggestions');
+    menu.hidden = true;
+    menu.replaceChildren();
+    consoleSuggestions = [];
+    activeConsoleSuggestion = 0;
+    consoleSuggestionRange = null;
+    $('#consoleCommandInput').setAttribute('aria-expanded', 'false');
+  }
+
+  function setActiveConsoleSuggestion(index) {
+    if (!consoleSuggestions.length) return;
+    activeConsoleSuggestion = (index + consoleSuggestions.length) % consoleSuggestions.length;
+    const menu = $('#consoleSuggestions');
+    menu.querySelectorAll('.console-suggestion').forEach((item, itemIndex) => {
+      item.classList.toggle('active', itemIndex === activeConsoleSuggestion);
+      item.setAttribute('aria-selected', String(itemIndex === activeConsoleSuggestion));
+    });
+    const active = menu.querySelectorAll('.console-suggestion')[activeConsoleSuggestion];
+    if (active) active.scrollIntoView({ block: 'nearest' });
+  }
+
+  function applyConsoleSuggestion(index = activeConsoleSuggestion) {
+    const suggestion = consoleSuggestions[index];
+    if (!suggestion || !consoleSuggestionRange) return;
+    const input = $('#consoleCommandInput');
+    const { from, to } = consoleSuggestionRange;
+    const before = input.value.slice(0, from);
+    const after = input.value.slice(to);
+    const insertion = suggestion.label;
+    input.value = before + insertion + after;
+    const cursor = before.length + insertion.length;
+    input.focus();
+    input.setSelectionRange(cursor, cursor);
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+    hideConsoleSuggestions();
+  }
+
+  function updateConsoleSuggestions() {
+    const menu = $('#consoleSuggestions');
+    const input = $('#consoleCommandInput');
+    const context = getConsoleCompletionContext();
+    if (!context || (!context.query && !input.value.slice(0, input.selectionStart).trim().endsWith('.'))) {
+      hideConsoleSuggestions();
+      return;
+    }
+
+    const query = context.query.toLowerCase();
+    const matches = context.candidates
+      .filter((item) => item.label.toLowerCase().startsWith(query))
+      .sort((a, b) => {
+        const aExact = a.label.toLowerCase() === query ? 0 : 1;
+        const bExact = b.label.toLowerCase() === query ? 0 : 1;
+        return aExact - bExact || a.label.localeCompare(b.label);
+      })
+      .slice(0, 12);
+
+    if (!matches.length) {
+      hideConsoleSuggestions();
+      return;
+    }
+
+    consoleSuggestions = matches;
+    activeConsoleSuggestion = 0;
+    consoleSuggestionRange = { from: context.from, to: context.to };
+    menu.replaceChildren();
+
+    matches.forEach((suggestion, index) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'console-suggestion' + (index === 0 ? ' active' : '');
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', String(index === 0));
+      const label = document.createElement('span');
+      label.className = 'suggestion-name';
+      label.textContent = suggestion.label;
+      const kind = document.createElement('span');
+      kind.className = 'suggestion-kind';
+      kind.textContent = suggestion.kind;
+      item.append(label, kind);
+      item.addEventListener('mousedown', (event) => event.preventDefault());
+      item.addEventListener('click', () => applyConsoleSuggestion(index));
+      menu.append(item);
+    });
+
+    menu.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  }
+
   function handleConsoleCommandKeydown(event) {
     const input = $('#consoleCommandInput');
+    const suggestionsOpen = !$('#consoleSuggestions').hidden;
+
+    if (event.key === 'Escape' && suggestionsOpen) {
+      event.preventDefault();
+      hideConsoleSuggestions();
+      return;
+    }
+    if (event.key === 'Tab' && suggestionsOpen) {
+      event.preventDefault();
+      applyConsoleSuggestion();
+      return;
+    }
+    if (event.key === 'ArrowDown' && suggestionsOpen) {
+      event.preventDefault();
+      setActiveConsoleSuggestion(activeConsoleSuggestion + 1);
+      return;
+    }
+    if (event.key === 'ArrowUp' && suggestionsOpen) {
+      event.preventDefault();
+      setActiveConsoleSuggestion(activeConsoleSuggestion - 1);
+      return;
+    }
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
+      hideConsoleSuggestions();
       const command = input.value;
       input.value = '';
       input.style.height = 'auto';
@@ -665,6 +841,7 @@
         commandHistoryIndex = Math.max(0, commandHistoryIndex - 1);
         input.value = commandHistory[commandHistoryIndex] || '';
         input.setSelectionRange(input.value.length, input.value.length);
+        updateConsoleSuggestions();
       }
       return;
     }
@@ -675,9 +852,11 @@
         commandHistoryIndex = Math.min(commandHistory.length, commandHistoryIndex + 1);
         input.value = commandHistoryIndex === commandHistory.length ? '' : commandHistory[commandHistoryIndex];
         input.setSelectionRange(input.value.length, input.value.length);
+        updateConsoleSuggestions();
       }
     }
   }
+
 
   function setEnvironmentTab(tab) {
     const showConsole = tab === 'console';
@@ -808,6 +987,14 @@
   $('#consoleCommandInput').addEventListener('input', (event) => {
     event.currentTarget.style.height = 'auto';
     event.currentTarget.style.height = Math.min(event.currentTarget.scrollHeight, 120) + 'px';
+    updateConsoleSuggestions();
+  });
+  $('#consoleCommandInput').addEventListener('click', updateConsoleSuggestions);
+  $('#consoleCommandInput').addEventListener('keyup', (event) => {
+    if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) updateConsoleSuggestions();
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.console-command-form')) hideConsoleSuggestions();
   });
   $('#problemsToggle').addEventListener('click', () => toggleProblems());
   $('#closeProblemsBtn').addEventListener('click', () => toggleProblems(false));
