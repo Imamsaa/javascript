@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/lib/codemirror.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/hint/show-hint.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/lint/lint.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261124-console-input-fix">
 </head>
 <body>
   <div class="app-shell">
@@ -103,7 +103,7 @@
           <div class="console-output" id="consoleOutput" role="log" aria-live="polite"><div class="console-placeholder">Jalankan kode di Preview, lalu ketik perintah JavaScript di bawah.</div></div>
           <form class="console-command-form" id="consoleCommandForm" autocomplete="off">
             <label class="console-prompt" for="consoleCommandInput">&gt;</label>
-            <textarea id="consoleCommandInput" rows="1" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Ketik perintah JavaScript…  (Enter untuk menjalankan, Shift + Enter untuk baris baru)" aria-label="Perintah JavaScript Console"></textarea>
+            <textarea id="consoleCommandInput" rows="1" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Ketik perintah JavaScript… (Enter untuk menjalankan)" aria-label="Perintah JavaScript Console"></textarea>
             <button class="console-submit" type="submit" title="Jalankan perintah">↵</button>
           </form>
           <div class="console-footer"><span>JavaScript Console</span><span>↑ ↓ riwayat perintah</span></div>
