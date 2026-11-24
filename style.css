@@ -782,3 +782,147 @@ li.CodeMirror-hint-active { color: #172033; background: var(--accent); }
   }
   .shortcut-hint { display: none; }
 }
+
+
+/* Learning materials and task dialog */
+.content-dialog {
+  width: min(920px, calc(100vw - 28px));
+  max-width: 920px;
+  max-height: min(88vh, 920px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.dialog-inner { padding: 21px; }
+.dialog-top {
+  position: sticky;
+  z-index: 5;
+  top: -21px;
+  margin: -21px -21px 17px;
+  padding: 17px 21px 14px;
+  border-bottom: 1px solid var(--line);
+  background: #142238;
+}
+.dialog-top h2 { font-size: 19px; }
+.dialog-content { display: grid; gap: 14px; }
+.material-hero {
+  padding: 19px 20px;
+  border: 1px solid rgba(245,200,76,.2);
+  border-radius: 12px;
+  background: linear-gradient(120deg, rgba(245,200,76,.1), rgba(125,181,255,.06));
+}
+.content-eyebrow, .task-index {
+  color: var(--accent);
+  font: 9px var(--mono);
+  letter-spacing: 1.1px;
+}
+.material-hero-title { margin: 7px 0 6px; font-size: 22px; letter-spacing: -.5px; }
+.material-hero-description { max-width: 690px; margin: 0; color: #c1cede; font-size: 12px; line-height: 1.65; }
+.material-hero-meta { margin: 11px 0 0; color: #8ea2bc; font: 10px var(--mono); }
+.lesson-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; }
+.lesson-card, .task-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(5,12,23,.24);
+}
+.lesson-card-heading { display: flex; align-items: flex-start; gap: 9px; }
+.lesson-number {
+  display: grid;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border: 1px solid rgba(125,181,255,.22);
+  border-radius: 7px;
+  color: #9fc5f7;
+  background: rgba(125,181,255,.08);
+  font: 9px var(--mono);
+}
+.lesson-card-title { margin: 3px 0 0; color: #e5edf8; font-size: 12px; line-height: 1.4; }
+.lesson-description, .task-description {
+  margin: 9px 0 0;
+  color: #aebed2;
+  font-size: 11px;
+  line-height: 1.65;
+}
+.lesson-points, .task-requirements {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #b9c7d8;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.lesson-code {
+  max-width: 100%;
+  margin: 11px 0 0;
+  padding: 10px 11px;
+  overflow: auto;
+  border: 1px solid rgba(148,163,184,.12);
+  border-radius: 7px;
+  color: #c3e88d;
+  background: #091321;
+  font: 10px/1.65 var(--mono);
+  white-space: pre;
+}
+.lesson-code code { font: inherit; }
+.lesson-note {
+  margin: 9px 0 0;
+  padding-left: 9px;
+  border-left: 2px solid rgba(245,200,76,.55);
+  color: #93a7c0;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.source-credit, .task-disclaimer {
+  padding: 9px 2px 2px;
+  color: #8698af;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.source-credit a { color: #9fc6f5; text-decoration: none; }
+.source-credit a:hover { text-decoration: underline; }
+.tasks-intro {
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(125,181,255,.055);
+}
+.tasks-intro h3 { margin: 0; font-size: 14px; }
+.tasks-intro p { margin: 6px 0 0; color: #aebed2; font-size: 11px; line-height: 1.6; }
+.task-card { padding: 15px; }
+.task-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.task-title-wrap { min-width: 0; }
+.task-title-wrap h3 { margin: 5px 0 0; font-size: 13px; line-height: 1.45; }
+.task-level {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid rgba(85,214,164,.2);
+  border-radius: 99px;
+  color: #8de0ba;
+  background: rgba(85,214,164,.07);
+  font-size: 9px;
+}
+.task-focus { margin: 7px 0 0; color: #86a7ca; font: 9px var(--mono); }
+.task-expected { margin: 10px 0 0; padding: 8px 10px; border-radius: 6px; color: #aebfd3; background: rgba(255,255,255,.035); font-size: 10px; line-height: 1.55; }
+.task-expected strong { color: #dbe6f4; }
+.task-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+.task-start { padding: 8px 12px; font-size: 10px; }
+.task-disclaimer { margin: 0; }
+@media (max-width: 700px) {
+  .content-dialog { width: calc(100vw - 18px); max-height: 92vh; }
+  .dialog-inner { padding: 14px; }
+  .dialog-top {
+    top: -14px;
+    margin: -14px -14px 13px;
+    padding: 13px 14px 11px;
+  }
+  .material-hero { padding: 15px; }
+  .material-hero-title { font-size: 19px; }
+  .lesson-grid { grid-template-columns: minmax(0,1fr); }
+  .lesson-card, .task-card { padding: 12px; }
+  .task-card-top { gap: 8px; }
+  .task-title-wrap h3 { font-size: 12px; }
+}
