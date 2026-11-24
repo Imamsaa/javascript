@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101827">
+  <meta name="theme-color" content="#0b1220">
   <meta name="description" content="JavaScript Playground — ruang latihan JavaScript interaktif.">
   <title>JavaScript Playground</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/hint/show-hint.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/lint/lint.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,16 +16,15 @@
     <header class="topbar">
       <a class="brand" href="./" aria-label="JavaScript Playground">
         <span class="brand-mark">JS</span>
-        <span class="brand-copy">
-          <strong>JavaScript Playground</strong>
-          <small>ICT Al Firdaus</small>
-        </span>
+        <span class="brand-copy"><strong>JavaScript Playground</strong><small>ICT Al Firdaus</small></span>
       </a>
-      <div class="topbar-actions">
-        <span class="save-status" id="saveStatus"><span class="status-dot"></span> Tersimpan di browser</span>
-        <button class="button button-ghost" id="clearConsoleBtn" type="button" title="Bersihkan console">Bersihkan console</button>
+      <nav class="topbar-actions" aria-label="Navigasi utama">
+        <button class="nav-button" id="materialsBtn" type="button">Materi <span class="nav-count">0</span></button>
+        <button class="nav-button" id="tasksBtn" type="button">Tugas <span class="nav-count">0</span></button>
+        <span class="topbar-divider"></span>
+        <button class="button button-ghost" id="toggleConsoleBtn" type="button" aria-expanded="false">Console</button>
         <button class="button button-primary" id="runBtn" type="button"><span aria-hidden="true">▶</span> Jalankan <kbd>Ctrl ↵</kbd></button>
-      </div>
+      </nav>
     </header>
 
     <section class="intro-bar">
@@ -31,107 +33,106 @@
         <h1>Tempat bermain dengan JavaScript.</h1>
         <p>Tulis kode, jalankan, dan amati hasilnya secara langsung.</p>
       </div>
-      <div class="intro-meta">
-        <span class="meta-chip"><span class="pulse"></span> Playground siap</span>
-        <span class="meta-chip">Vanilla JavaScript</span>
-      </div>
+      <div class="intro-meta"><span class="meta-chip"><span class="pulse"></span> Playground siap</span><span class="meta-chip">Vanilla JavaScript</span></div>
     </section>
 
-    <main class="main-layout">
-      <aside class="sidebar panel">
-        <div class="sidebar-heading">
-          <div>
-            <span class="section-kicker">PEMBELAJARAN</span>
-            <h2>Materi &amp; Tugas</h2>
+    <main class="workspace-grid">
+      <section class="editor-panel panel" aria-label="Code editor">
+        <div class="panel-topline">
+          <div class="panel-title-wrap"><span class="section-kicker">CODE EDITOR</span><h2>Editor</h2></div>
+          <div class="editor-tools">
+            <span class="editor-language"><span class="js-mini">JS</span> <span id="editorLanguage">JavaScript</span></span>
+            <button class="tool-button" id="formatBtn" type="button" title="Format kode (Shift + Alt + F)"><span aria-hidden="true">✦</span> Format</button>
+            <label class="auto-format"><input id="formatOnRun" type="checkbox" checked><span class="toggle-track"></span><span>Format saat Run</span></label>
+            <button class="icon-button" id="resetBtn" type="button" title="Kosongkan semua editor" aria-label="Kosongkan semua editor">↺</button>
           </div>
-          <span class="count-badge" id="taskCount">0</span>
         </div>
-        <label class="search-box">
-          <span aria-hidden="true">⌕</span>
-          <input id="taskSearch" type="search" placeholder="Cari materi atau tugas…" disabled aria-label="Cari materi atau tugas">
-        </label>
-        <div class="empty-curriculum" id="emptyCurriculum">
-          <div class="empty-icon" aria-hidden="true">＋</div>
-          <strong>Belum ada materi</strong>
-          <p>Daftar materi dan tugas akan ditambahkan di sini.</p>
-        </div>
-        <div class="sidebar-footer">
-          <span class="footer-icon" aria-hidden="true">⌘</span>
-          <p><strong>Tips</strong><br>Tekan <kbd>Ctrl</kbd> + <kbd>Enter</kbd> untuk menjalankan kode.</p>
-        </div>
-      </aside>
 
-      <section class="workspace">
-        <section class="editor-panel panel" aria-label="Editor kode">
-          <div class="panel-topline">
-            <div class="panel-title-wrap">
-              <span class="section-kicker">CODE EDITOR</span>
-              <h2>Editor</h2>
+        <div class="editor-tabs" role="tablist" aria-label="Pilih file">
+          <button class="editor-tab" id="htmlTab" type="button" role="tab" aria-selected="false" data-tab="html"><span class="tab-dot html-dot"></span> index.html</button>
+          <button class="editor-tab" id="cssTab" type="button" role="tab" aria-selected="false" data-tab="css"><span class="tab-dot css-dot"></span> style.css</button>
+          <button class="editor-tab active" id="jsTab" type="button" role="tab" aria-selected="true" data-tab="js"><span class="tab-dot js-dot"></span> script.js</button>
+        </div>
+
+        <div class="editor-surface">
+          <textarea id="codeEditor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Editor JavaScript" placeholder="// Tulis kode JavaScript di sini…"></textarea>
+          <div class="editor-fallback" id="editorFallback" hidden>Editor lanjutan belum termuat. Periksa koneksi internet atau muat ulang halaman.</div>
+        </div>
+
+        <div class="editor-footer">
+          <span class="save-status" id="saveStatus"><span class="status-dot"></span> Tersimpan di browser</span>
+          <span><span id="lineCount">1</span> baris <span class="footer-separator">·</span> <span id="charCount">0</span> karakter</span>
+          <button class="problems-toggle" id="problemsToggle" type="button" aria-expanded="false"><span class="problem-icon">●</span> Problems <b id="problemCount">0</b></button>
+        </div>
+
+        <section class="problems-panel" id="problemsPanel" hidden aria-label="ESLint diagnostics">
+          <div class="problems-heading">
+            <div><span class="section-kicker">CODE ANALYSIS</span><h3>Problems <span id="problemHeadingCount">0</span></h3></div>
+            <div class="problem-summary"><span class="error-count" id="errorCount">0 errors</span><span class="warning-count" id="warningCount">0 warnings</span></div>
+            <button class="icon-button small-icon" id="closeProblemsBtn" type="button" aria-label="Tutup panel Problems">×</button>
+          </div>
+          <div class="problems-list" id="problemsList"><p class="problems-empty">Belum ada masalah yang ditemukan.</p></div>
+        </section>
+      </section>
+
+      <section class="output-column" aria-label="Hasil kode">
+        <section class="preview-panel panel">
+          <div class="output-heading">
+            <div><span class="section-kicker">LIVE ENVIRONMENT</span><h2>Preview</h2></div>
+            <div class="preview-actions"><span class="preview-state" id="previewState">Belum dijalankan</span><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          </div>
+          <div class="preview-frame-wrap" id="previewWrap">
+            <div class="preview-empty" id="previewEmpty">
+              <div class="preview-empty-icon">◫</div><strong>Preview masih kosong</strong>
+              <p>Tulis HTML, CSS, atau JavaScript, lalu tekan Jalankan.</p>
             </div>
-            <div class="editor-tools">
-              <span class="editor-language"><span class="js-mini">JS</span> JavaScript</span>
-              <button class="icon-button" id="resetBtn" type="button" title="Kosongkan semua editor" aria-label="Kosongkan semua editor">↺</button>
-            </div>
-          </div>
-          <div class="editor-tabs" role="tablist" aria-label="Pilih editor">
-            <button class="editor-tab" id="htmlTab" type="button" role="tab" aria-selected="false" data-tab="html"><span class="tab-dot html-dot"></span> index.html</button>
-            <button class="editor-tab" id="cssTab" type="button" role="tab" aria-selected="false" data-tab="css"><span class="tab-dot css-dot"></span> style.css</button>
-            <button class="editor-tab active" id="jsTab" type="button" role="tab" aria-selected="true" data-tab="js"><span class="tab-dot js-dot"></span> script.js</button>
-          </div>
-          <div class="editor-surface">
-            <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
-            <textarea id="codeEditor" class="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Editor JavaScript" placeholder="// Tulis kode JavaScript di sini…"></textarea>
-          </div>
-          <div class="editor-footer">
-            <span id="editorHint">JavaScript · ES6+</span>
-            <span><span id="lineCount">1</span> baris <span class="footer-separator">·</span> <span id="charCount">0</span> karakter</span>
+            <iframe id="previewFrame" title="Hasil preview JavaScript" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
           </div>
         </section>
 
-        <section class="output-column">
-          <section class="preview-panel panel">
-            <div class="output-heading">
-              <div>
-                <span class="section-kicker">LIVE ENVIRONMENT</span>
-                <h2>Preview</h2>
-              </div>
-              <span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span>
-            </div>
-            <div class="preview-frame-wrap" id="previewWrap">
-              <div class="preview-empty" id="previewEmpty">
-                <div class="preview-empty-icon">◫</div>
-                <strong>Preview masih kosong</strong>
-                <p>Tambahkan HTML atau jalankan JavaScript untuk melihat hasilnya.</p>
-              </div>
-              <iframe id="previewFrame" title="Hasil preview JavaScript" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
-            </div>
-          </section>
-
-          <section class="console-panel panel">
-            <div class="output-heading console-heading">
-              <div class="console-title">
-                <span class="terminal-icon" aria-hidden="true">&gt;_</span>
-                <div>
-                  <span class="section-kicker">OUTPUT</span>
-                  <h2>Console</h2>
-                </div>
-              </div>
-              <span class="console-state" id="consoleState">Menunggu eksekusi</span>
-            </div>
-            <div class="console-output" id="consoleOutput" role="log" aria-live="polite">
-              <div class="console-placeholder">Output console akan muncul di sini setelah kode dijalankan.</div>
-            </div>
-          </section>
+        <section class="console-panel panel collapsed" id="consolePanel">
+          <button class="console-heading" id="consoleHeading" type="button" aria-expanded="false">
+            <span class="console-title"><span class="terminal-icon" aria-hidden="true">&gt;_</span><span><span class="section-kicker">OUTPUT</span><strong>Console</strong></span></span>
+            <span class="console-heading-right"><span class="console-state" id="consoleState">Menunggu eksekusi</span><span class="chevron">⌄</span></span>
+          </button>
+          <div class="console-output" id="consoleOutput" role="log" aria-live="polite"><div class="console-placeholder">Output console akan muncul di sini setelah kode dijalankan.</div></div>
+          <div class="console-footer"><span>Console JavaScript</span><button id="clearConsoleBtn" type="button">Bersihkan</button></div>
         </section>
       </section>
     </main>
 
-    <footer class="app-footer">
-      <span>JavaScript Playground <span class="footer-separator">·</span> ICT Al Firdaus</span>
-      <span>Kode tersimpan secara lokal pada browser ini.</span>
-    </footer>
+    <footer class="app-footer"><span>JavaScript Playground <span class="footer-separator">·</span> ICT Al Firdaus</span><span>Kode tersimpan secara lokal pada browser ini.</span></footer>
   </div>
+
+  <dialog class="content-dialog" id="contentDialog">
+    <div class="dialog-inner">
+      <div class="dialog-top"><div><span class="section-kicker" id="dialogKicker">PEMBELAJARAN</span><h2 id="dialogTitle">Materi</h2></div><button class="icon-button" id="closeDialogBtn" type="button" aria-label="Tutup">×</button></div>
+      <div class="dialog-empty"><div class="empty-icon">＋</div><strong id="dialogEmptyTitle">Belum ada materi</strong><p id="dialogDescription">Materi akan ditambahkan setelah struktur pembelajaran disiapkan.</p></div>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/selection/active-line.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/hint/show-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/hint/javascript-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/hint/xml-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/hint/html-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/hint/css-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.21/addon/lint/lint.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/eslint-linter-browserify@10.14.0/linter.min.js"></script>
+  <script src="https://unpkg.com/prettier@3.10.1/standalone.js"></script>
+  <script src="https://unpkg.com/prettier@3.10.1/plugins/babel.js"></script>
+  <script src="https://unpkg.com/prettier@3.10.1/plugins/estree.js"></script>
+  <script src="https://unpkg.com/prettier@3.10.1/plugins/html.js"></script>
+  <script src="https://unpkg.com/prettier@3.10.1/plugins/postcss.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
