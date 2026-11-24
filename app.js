@@ -917,6 +917,127 @@
     showToast('Semua editor berhasil dikosongkan.');
   }
 
+  function selectCurrentLine(cm) {
+    const cursor = cm.getCursor();
+    const start = { line: cursor.line, ch: 0 };
+    const end = { line: cursor.line, ch: cm.getLine(cursor.line).length };
+    cm.setSelection(start, end);
+  }
+
+  function deleteCurrentLines(cm) {
+    const selections = cm.listSelections();
+    const fromLine = Math.min(...selections.map((selection) => Math.min(selection.anchor.line, selection.head.line)));
+    const toLine = Math.max(...selections.map((selection) => Math.max(selection.anchor.line, selection.head.line)));
+    const lastLine = cm.lineCount() - 1;
+    const from = { line: fromLine, ch: 0 };
+    let to;
+    if (toLine < lastLine) to = { line: toLine + 1, ch: 0 };
+    else if (fromLine > 0) {
+      cm.replaceRange('', { line: fromLine - 1, ch: cm.getLine(fromLine - 1).length }, { line: toLine, ch: cm.getLine(toLine).length }, '+deleteLine');
+      cm.setCursor({ line: fromLine - 1, ch: cm.getLine(fromLine - 1).length });
+      return;
+    } else {
+      to = { line: toLine, ch: cm.getLine(toLine).length };
+    }
+    cm.replaceRange('', from, to, '+deleteLine');
+    cm.setCursor({ line: Math.min(fromLine, cm.lineCount() - 1), ch: 0 });
+  }
+
+  function duplicateCurrentLines(cm, direction) {
+    const selections = cm.listSelections();
+    const fromLine = Math.min(...selections.map((selection) => Math.min(selection.anchor.line, selection.head.line)));
+    const toLine = Math.max(...selections.map((selection) => Math.max(selection.anchor.line, selection.head.line)));
+    const block = [];
+    for (let line = fromLine; line <= toLine; line += 1) block.push(cm.getLine(line));
+    if (direction < 0 && fromLine === 0) direction = 1;
+    const anchorLine = direction < 0 ? fromLine : toLine + 1;
+    if (direction < 0) {
+      cm.replaceRange(block.join('\n') + '\n', { line: fromLine, ch: 0 }, { line: fromLine, ch: 0 }, '+duplicateLine');
+      cm.setSelection({ line: fromLine, ch: 0 }, { line: toLine, ch: cm.getLine(toLine).length });
+    } else {
+      const end = { line: toLine, ch: cm.getLine(toLine).length };
+      cm.replaceRange('\n' + block.join('\n'), end, end, '+duplicateLine');
+      cm.setSelection({ line: anchorLine, ch: 0 }, { line: anchorLine + block.length - 1, ch: block[block.length - 1].length });
+    }
+  }
+
+  function moveCurrentLines(cm, direction) {
+    const selections = cm.listSelections();
+    const fromLine = Math.min(...selections.map((selection) => Math.min(selection.anchor.line, selection.head.line)));
+    const toLine = Math.max(...selections.map((selection) => Math.max(selection.anchor.line, selection.head.line)));
+    const targetLine = fromLine + direction;
+    if (targetLine < 0 || targetLine >= cm.lineCount()) return;
+
+    const lines = [];
+    for (let line = 0; line < cm.lineCount(); line += 1) lines.push(cm.getLine(line));
+    const block = lines.splice(fromLine, toLine - fromLine + 1);
+    lines.splice(direction < 0 ? fromLine - 1 : fromLine + 1, 0, ...block);
+
+    const selectedText = block.join('\n');
+    const docEnd = { line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length };
+    cm.replaceRange(lines.join('\n'), { line: 0, ch: 0 }, docEnd, '+moveLine');
+
+    const nextFrom = fromLine + direction;
+    const lastOffset = block.length - 1;
+    const maxCh = (line, ch) => Math.min(ch, cm.getLine(line).length);
+    const head = cm.getCursor('head');
+    const anchor = cm.getCursor('anchor');
+    const oldHeadLine = Math.max(fromLine, Math.min(toLine, head.line));
+    const oldAnchorLine = Math.max(fromLine, Math.min(toLine, anchor.line));
+    cm.setSelection(
+      { line: nextFrom + (oldAnchorLine - fromLine), ch: maxCh(nextFrom + (oldAnchorLine - fromLine), anchor.ch) },
+      { line: nextFrom + (oldHeadLine - fromLine), ch: maxCh(nextFrom + (oldHeadLine - fromLine), head.ch) }
+    );
+  }
+
+  function selectNextOccurrence(cm) {
+    const selection = cm.listSelections()[0];
+    let selected = cm.getRange(selection.from(), selection.to());
+    if (!selected) {
+      const token = cm.getTokenAt(cm.getCursor());
+      selected = token.string.trim();
+      if (!selected || !/^[A-Za-z_$][\w$]*$/.test(selected)) return;
+      cm.setSelection(
+        { line: cm.getCursor().line, ch: token.start },
+        { line: cm.getCursor().line, ch: token.end }
+      );
+    }
+    const current = cm.getCursor('head');
+    const doc = cm.getValue();
+    const absolute = cm.indexFromPos(current);
+    const findAt = (start) => {
+      const index = doc.indexOf(selected, start);
+      if (index < 0) return null;
+      const before = index > 0 ? doc[index - 1] : '';
+      const after = doc[index + selected.length] || '';
+      if (/\w/.test(selected[0]) && /[\w$]/.test(before)) return findAt(index + 1);
+      if (/\w/.test(selected[selected.length - 1]) && /[\w$]/.test(after)) return findAt(index + 1);
+      return index;
+    };
+    let found = findAt(absolute);
+    if (found === null) found = findAt(0);
+    if (found === null) return;
+    const from = cm.posFromIndex(found);
+    const to = cm.posFromIndex(found + selected.length);
+    const ranges = cm.listSelections().map((item) => ({ anchor: item.anchor, head: item.head }));
+    ranges.push({ anchor: from, head: to });
+    cm.setSelections(ranges, ranges.length - 1);
+  }
+
+  function indentSelection(cm, direction) {
+    if (cm.somethingSelected()) cm.execCommand(direction > 0 ? 'indentMore' : 'indentLess');
+    else if (direction > 0) cm.replaceSelection('  ', 'end');
+    else cm.execCommand('indentLess');
+  }
+
+  function toggleCurrentComment(cm) {
+    if (CodeMirror.commands.toggleComment) {
+      CodeMirror.commands.toggleComment(cm);
+      return;
+    }
+    showToast('Fitur comment belum termuat. Periksa koneksi internet.');
+  }
+
   function initializeCodeMirror() {
     if (!window.CodeMirror) {
       textarea.style.display = 'block';
@@ -940,9 +1061,26 @@
         'Cmd-Space': (cm) => showAutocomplete(cm, activeTab),
         'Ctrl-Enter': runCode,
         'Cmd-Enter': runCode,
+        'Ctrl-S': (cm) => { saveWorkspace(); showToast('Kode disimpan di browser.'); },
+        'Cmd-S': (cm) => { saveWorkspace(); showToast('Kode disimpan di browser.'); },
         'Shift-Alt-F': formatActiveEditor,
         'Cmd-Shift-F': formatActiveEditor,
-        'Tab': (cm) => cm.replaceSelection('  ', 'end')
+        'Ctrl-/': toggleCurrentComment,
+        'Cmd-/': toggleCurrentComment,
+        'Ctrl-F': 'findPersistent',
+        'Cmd-F': 'findPersistent',
+        'Ctrl-H': 'replace',
+        'Cmd-Alt-F': 'replace',
+        'Ctrl-G': 'jumpToLine',
+        'Ctrl-L': selectCurrentLine,
+        'Ctrl-D': selectNextOccurrence,
+        'Ctrl-Shift-K': deleteCurrentLines,
+        'Alt-Up': (cm) => moveCurrentLines(cm, -1),
+        'Alt-Down': (cm) => moveCurrentLines(cm, 1),
+        'Shift-Alt-Up': (cm) => duplicateCurrentLines(cm, -1),
+        'Shift-Alt-Down': (cm) => duplicateCurrentLines(cm, 1),
+        'Tab': (cm) => indentSelection(cm, 1),
+        'Shift-Tab': (cm) => indentSelection(cm, -1)
       }
     });
     codeEditor.setValue(editors[activeTab].value);
