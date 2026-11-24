@@ -27,8 +27,6 @@ Halaman awal langsung menampilkan **Code Editor** dan **Preview**. Tombol **Jala
 | `Ctrl + Enter` | Jalankan kode |
 | `Ctrl + Space` | Autocomplete |
 | `Ctrl + /` | Comment/uncomment baris atau seleksi |
-| `Ctrl + F` | Cari |
-| `Ctrl + H` | Cari dan ganti |
 | `Ctrl + G` | Lompat ke baris |
 | `Ctrl + D` | Pilih kemunculan berikutnya dari teks/identifier |
 | `Ctrl + L` | Pilih baris aktif |
